@@ -2,7 +2,7 @@
 Integral components for the CauseHive Donation App.
 
 
-Overview of CauseHive’s Requirements
+# Overview of CauseHive’s Requirements
 CauseHive is a web application designed to connect donors with a wide range of charitable
 events and causes. The platform enables users to easily register, browse and search for events
 or causes, and make secure donations using various payment methods. Users can manage
