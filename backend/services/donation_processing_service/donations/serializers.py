@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from .models import Donation
-from .utils import validate_cause_with_service, validate_user_id_with_service, validate_event_with_service
-
+from .utils import validate_cause_with_service, validate_user_id_with_service
 class DonationSerializer(serializers.ModelSerializer):
     user_id = serializers.UUIDField(required=True)
     event_or_cause_id = serializers.UUIDField(required=True)
@@ -17,8 +16,8 @@ class DonationSerializer(serializers.ModelSerializer):
         return value
 
     def validate_event_or_cause_id(self, value):
-        if not (validate_event_with_service(value) or validate_cause_with_service(value)):
-            raise serializers.ValidationError('Event or Cause id is not valid.')
+        if not validate_cause_with_service(value):
+            raise serializers.ValidationError('Cause id is not valid.')
         return value
 
     def validate_amount(self, value):
