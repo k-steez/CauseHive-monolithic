@@ -4,7 +4,7 @@ from django.db import models
 class Donation(models.Model):
     id = models.UUIDField(primary_key=True, editable=False)
     user_id = models.UUIDField(db_index=True, editable=False)
-    event_or_cause_id = models.UUIDField(db_index=True, editable=False)  # References either an event or cause ID from the event_causes_services
+    cause_id = models.UUIDField(db_index=True, editable=False)  # References either an event or cause ID from the event_causes_services
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     currency = models.CharField(max_length=3, default='GHS')  # Default currency is GHS
     donated_at = models.DateTimeField(auto_now_add=True)
