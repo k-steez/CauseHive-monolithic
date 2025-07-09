@@ -7,7 +7,7 @@ from django.conf import settings
 class CartItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = CartItem
-        fields = ['id', 'cart', 'event_or_cause_id', 'quantity', 'donation_amount']
+        fields = '__all__'
         read_only_fields = ['id']
 
 class CartSerializer(serializers.ModelSerializer):
@@ -16,5 +16,5 @@ class CartSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cart
-        fields = ['id', 'user_id', 'created_at', 'updated_at', 'status', 'items']
+        fields = '__all__'
         read_only_fields = ['id', 'created_at', 'updated_at']
