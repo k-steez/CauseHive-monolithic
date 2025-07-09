@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
             name='CartItem',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('event_or_cause_id', models.UUIDField(db_index=True, default=uuid.uuid4, editable=False)),
+                ('cause_id', models.UUIDField(db_index=True, default=uuid.uuid4, editable=False)),
                 ('donation_amount', models.DecimalField(decimal_places=2, max_digits=10)),
                 ('quantity', models.PositiveIntegerField(default=1)),
                 ('cart', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='cart.cart')),

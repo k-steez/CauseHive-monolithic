@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.UUIDField(editable=False, primary_key=True, serialize=False)),
                 ('user_id', models.UUIDField(db_index=True, editable=False)),
-                ('event_or_cause_id', models.UUIDField(db_index=True, editable=False)),
+                ('cause_id', models.UUIDField(db_index=True, editable=False)),
                 ('amount', models.DecimalField(decimal_places=2, max_digits=10)),
                 ('currency', models.CharField(default='GHS', max_length=3)),
                 ('donated_at', models.DateTimeField(auto_now_add=True)),
