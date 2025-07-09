@@ -15,8 +15,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+
+from donations.views import DonationViewSet
+from payments.views import PaymentTransactionViewSet
+
+router = DefaultRouter()
+router.register(r'donations', DonationViewSet)
+router.register(r'payments', PaymentTransactionViewSet, basename='paymenttransaction')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/', include(router.urls)),
+    path('api/payments/', include('payments.urls')),
+    path('api/cart/', include('cart.urls')),
 ]
