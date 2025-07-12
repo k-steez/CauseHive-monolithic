@@ -4,17 +4,25 @@ from rest_framework import serializers
 from .models import Cart, CartItem
 from django.conf import settings
 
+from .utils import validate_user_id_with_service
+
+
 class CartItemSerializer(serializers.ModelSerializer):
+    cause_id = serializers.UUIDField(required=True, write_only=True)
+
     class Meta:
         model = CartItem
-        fields = '__all__'
+        fields = ['id', 'cause_id', 'donation_amount', 'quantity']
         read_only_fields = ['id']
+        extra_kwargs = {
+            'cart': {'read_only': True},
+            'quantity': {'required': False, 'default': 1},
+        }
 
 class CartSerializer(serializers.ModelSerializer):
-    user_id = serializers.UUIDField(read_only=True)
     items = CartItemSerializer(many=True, read_only=True)
 
     class Meta:
         model = Cart
-        fields = '__all__'
-        read_only_fields = ['id', 'created_at', 'updated_at']
+        fields = ['id', 'user_id', 'status', 'created_at', 'updated_at', 'items']
+        read_only_fields = ['id', 'user_id', 'created_at', 'updated_at']
