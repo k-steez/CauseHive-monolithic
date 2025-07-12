@@ -26,3 +26,16 @@ class CartSerializer(serializers.ModelSerializer):
         model = Cart
         fields = ['id', 'user_id', 'status', 'created_at', 'updated_at', 'items']
         read_only_fields = ['id', 'user_id', 'created_at', 'updated_at']
+
+    def to_representation(self, instance):
+        # Handle the case where the instance is None
+        if instance is None:
+            return {
+                "id": None,
+                "user_id": None,
+                "status": None,
+                "created_at": None,
+                "updated_at": None,
+                "items": []
+            }
+        return super().to_representation(instance)
