@@ -2,9 +2,14 @@ import requests
 from rest_framework import serializers
 from django.conf import settings
 
-def validate_user_id_with_service(value):
+def validate_user_id_with_service(value, request=None):
     user_service_url = getattr(settings, 'USER_SERVICE_URL', 'http://localhost:8000/user/api/auth')
     url = f"{user_service_url}/users/{value}/"
+    headers = {}
+    if request and hasattr(request, 'headers'):
+        auth_header = request.headers.get('Authorization')
+        if auth_header:
+            headers['Authorization'] = auth_header
     try:
         response = requests.get(url)
         if response.status_code != 200:
@@ -16,10 +21,14 @@ def validate_user_id_with_service(value):
         raise serializers.ValidationError('User service is not reachable.')
     return value
 
-def validate_cause_with_service(value):
-    cause_service_url = getattr(settings, 'CAUSE_SERVICE_URL', 'http://localhost:8000/causes')
+def validate_cause_with_service(value, request=None):
+    cause_service_url = getattr(settings, 'CAUSE_SERVICE_URL', 'http://localhost:8001/causes/')
     url = f"{cause_service_url}/details/{value}/"
-
+    headers = {}
+    if request and hasattr(request, 'headers'):
+        auth_header = request.headers.get('Authorization')
+        if auth_header:
+            headers['Authorization'] = auth_header
     try:
         response = requests.get(url)
         if response.status_code != 200:
