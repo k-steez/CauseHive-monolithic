@@ -18,6 +18,15 @@ class Cart(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=20, choices=CART_STATUS_CHOICES, default='active')
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user_id', 'status'],
+                condition=models.Q(status='active'),
+                name='unique_active_cart_per_user'
+            )
+        ]
+
 class CartItem(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
