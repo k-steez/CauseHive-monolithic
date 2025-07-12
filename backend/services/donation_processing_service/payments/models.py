@@ -1,9 +1,11 @@
+import uuid
+
 from django.db import models
 from donations.models import Donation
 
 # Create your models here.
 class PaymentTransaction(models.Model):
-    id =  models.UUIDField(primary_key=True, editable=False)
+    id =  models.UUIDField(primary_key=True, default=uuid.uuid4,editable=False)
     donation = models.OneToOneField(Donation, on_delete=models.CASCADE)
     user_id = models.UUIDField(db_index=True, editable=False)  # User who made the donation
     amount = models.DecimalField(max_digits=10, decimal_places=2)
