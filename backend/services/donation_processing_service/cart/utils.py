@@ -7,6 +7,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import AccessToken
 
+from cart.models import Cart
+
+
 def validate_user_id_with_service(value, request=None):
     user_service_url = getattr(settings, 'USER_SERVICE_URL', 'http://localhost:8000/user/auth')
     url = f"{user_service_url}/users/{value}/"
@@ -109,6 +112,33 @@ def get_recipient_id_from_service(cause_id, request=None):
         raise ValueError('Cause service is not reachable.')
     except Exception as e:
         return ValueError(f'Failed to get recipient information for cause {cause_id}: {str(e)}')
+
+def get_or_create_user_cart(user_id):
+    try:
+        cart = Cart.objects.get(user_id=user_id, status='active')
+        return cart, False # False means not created
+    except Cart.DoesNotExist:
+        raise Cart.DoesNotExist("You don't have any active cart.")
+    except Cart.MultipleObjectsReturned:
+        active_cart = Cart.objects.filter(user_id=user_id, status='active').order_by('-created_at')
+        cart = active_cart.first()
+
+        # Mark the others as abandoned
+        for old_cart in active_cart[1:]:
+            old_cart.status = 'abandoned'
+            old_cart.save()
+        return cart, False
+
+def create_user_cart(user_id):
+    """
+    Create a new cart for the user.
+    Returns the created cart.
+    """
+    # Mark any existing active cart as abandoned
+    Cart.objects.filter(user_id=user_id, status='active').update(status='abandoned')
+
+    cart = Cart.objects.create(user_id=user_id, status='active')
+    return cart
 
 def validate_request(view_func):
     @wraps(view_func)
