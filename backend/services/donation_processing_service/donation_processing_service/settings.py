@@ -32,8 +32,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-USER_SERVICE_URL = "http://localhost:8000/user/api/auth/"
-CAUSES_URL = "http://localhost:8001/causes/"
+USER_SERVICE_URL = "http://localhost:8000/user/auth"
+CAUSES_URL = "http://localhost:8001/causes"
 
 # Application definition
 
@@ -63,7 +63,7 @@ PAYSTACK_BASE_URL = "https://api.paystack.co"
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'donation_processing_service.authentication.JWTAuthenticationService',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',

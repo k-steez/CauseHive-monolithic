@@ -33,7 +33,7 @@ DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = []
 
-USER_SERVICE_URL = 'http://localhost:8000/user/api/auth'  # URL for user service
+USER_SERVICE_URL = 'http://localhost:8000/user/auth'  # URL for user service
 
 # Application definition
 
