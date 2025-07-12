@@ -28,6 +28,6 @@ router.register(r'payments', PaymentTransactionViewSet, basename='paymenttransac
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
-    path('api/payments/', include('payments.urls')),
-    path('api/cart/', include('cart.urls')),
+    path('payments/', include('payments.urls')),
+    path('cart/', include('cart.urls')),
 ]
