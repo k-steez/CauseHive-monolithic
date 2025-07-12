@@ -8,7 +8,8 @@ from rest_framework import status
 from .models import Cart, CartItem
 from .serializers import CartSerializer, CartItemSerializer
 from .utils import (validate_user_id_with_service, validate_cause_with_service,
-                    validate_request, get_user_email_from_service, get_recipient_id_from_service)
+                    validate_request, get_user_email_from_service,
+                    get_recipient_id_from_service, get_or_create_user_cart, create_user_cart)
 from .decorators import extract_user_from_token
 from donations.models import Donation
 from payments.models import PaymentTransaction
@@ -20,11 +21,20 @@ from payments.paystack import Paystack
 @extract_user_from_token
 @validate_request
 def get_cart(request):
-    # User ID is now available in request.user_id
+    # Validate user ID with the user service
     validate_user_id_with_service(request.user_id, request)
-    cart, _ = Cart.objects.get_or_create(user_id=request.user_id)
-    serializer = CartSerializer(cart)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+
+    try:
+        cart, created = get_or_create_user_cart(request.user_id)
+        serializer = CartSerializer(cart)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Cart.DoesNotExist:
+        return Response({
+            "message": "No active cart found",
+            "cart": None,
+            "items": []
+        }, status=status.HTTP_200_OK)
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticatedOrReadOnly])
@@ -36,11 +46,11 @@ def add_to_cart(request):
         validate_user_id_with_service(request.user_id, request)
         validate_cause_with_service(serializer.validated_data['cause_id'], request)
 
-        cart, created = Cart.objects.get_or_create(
-            user_id=request.user_id,
-            status='active',
-            defaults={'user_id': request.user_id}
-        )
+        try:
+            cart, created = get_or_create_user_cart(request.user_id)
+        except Cart.DoesNotExist:
+             # Create a new cart if it doesn't exist
+            cart = create_user_cart(request.user_id)
 
         existing_item = CartItem.objects.filter(
             cart=cart,
@@ -90,12 +100,38 @@ def remove_from_cart(request, item_id):
     cart_item.delete()
     return Response({"message": "Item removed from cart"}, status=status.HTTP_204_NO_CONTENT)
 
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticatedOrReadOnly])
+@extract_user_from_token
+@validate_request
+def delete_cart(request):
+    try:
+        cart, created = get_or_create_user_cart(request.user_id)
+
+        # Delete items in the cart
+        cart.items.all().delete()
+        # Delete the cart itself
+        cart.delete()
+
+        return Response({"message": "Cart deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+    except Cart.DoesNotExist:
+        return Response({"message": "No active cart found"}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticatedOrReadOnly])
 @extract_user_from_token
 @validate_request
 def checkout(request):
-    cart = get_object_or_404(Cart, user_id=request.user_id)
+    try:
+        cart = Cart.objects.get(user_id=request.user.id, status='active')
+    except Cart.DoesNotExist:
+        return Response({"message": "No active cart not found"}, status=status.HTTP_404_NOT_FOUND)
+    except Cart.MultipleObjectsReturned:
+        cart = Cart.objects.filter(user_id=request.user.id, status='active')
+
     if not cart.items.exists():
         return Response({"error": "Cart is empty"}, status=status.HTTP_400_BAD_REQUEST)
 
