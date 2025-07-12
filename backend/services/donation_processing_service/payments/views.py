@@ -52,6 +52,13 @@ class VerifyPaymentView(APIView):
                 if data['status'] == 'success':
                     payment.status = 'completed'
                     payment.save()
+
+                    if payment.donation:
+                        payment.donation.status = 'completed'
+                        payment.donation.save()
+
+                    # Might send confirmation mails here. Later. ✨
+
                     return Response({'message': 'Payment verified and updated successfully'}, status=status.HTTP_200_OK)
                 else:
                     payment.status = data['status']
@@ -86,8 +93,17 @@ class PaystackWebhookView(APIView):
             payment = PaymentTransaction.objects.get(transaction_id=reference)
             if payment_status == 'success':
                 payment.status = 'completed'
+
+                if payment.donation:
+                    payment.donation.status = 'completed'
+                    payment.donation.save()
+
             elif payment_status == 'failed':
                 payment.status = 'failed'
+
+                if payment.donation:
+                    payment.donation.status = 'failed'
+                    payment.donation.save()
             else:
                 payment.status = payment_status
             payment.save()
