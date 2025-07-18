@@ -10,5 +10,6 @@ dependencies = [
     "djangorestframework>=3.16.0",
     "pillow>=11.3.0",
     "psycopg2>=2.9.10",
+    "redis>=6.2.0",
     "requests>=2.32.4",
 ]
