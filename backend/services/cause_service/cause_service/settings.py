@@ -35,6 +35,10 @@ ALLOWED_HOSTS = []
 
 USER_SERVICE_URL = 'http://localhost:8000/user/auth'  # URL for user service
 
+# Redis configuration
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6379
+
 # Application definition
 
 INSTALLED_APPS = [

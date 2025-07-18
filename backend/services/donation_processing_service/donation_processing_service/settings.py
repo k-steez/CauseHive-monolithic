@@ -34,6 +34,7 @@ ALLOWED_HOSTS = []
 
 USER_SERVICE_URL = "http://localhost:8000/user/auth"
 CAUSES_URL = "http://localhost:8001/causes"
+CELERY_BROKER_URL = env("CELERY_BROKER_URL", default="redis://localhost:6379/0")
 
 # Application definition
 
@@ -48,6 +49,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
+
+    'celery',
     
     'donations',
     'cart',
