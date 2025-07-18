@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework import viewsets, permissions, status
 from rest_framework.views import APIView
+from donations.tasks import publish_donation_completed_event
 
 from .models import PaymentTransaction
 from .paystack import Paystack
@@ -56,6 +57,7 @@ class VerifyPaymentView(APIView):
                     if payment.donation:
                         payment.donation.status = 'completed'
                         payment.donation.save()
+                        publish_donation_completed_event.delay(payment.donation.cause_id, payment.donation.amount)
 
                     # Might send confirmation mails here. Later. ✨
 
@@ -97,6 +99,7 @@ class PaystackWebhookView(APIView):
                 if payment.donation:
                     payment.donation.status = 'completed'
                     payment.donation.save()
+                    publish_donation_completed_event.delay(payment.donation.cause_id, payment.donation.amount)
 
             elif payment_status == 'failed':
                 payment.status = 'failed'
