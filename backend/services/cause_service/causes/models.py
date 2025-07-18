@@ -8,7 +8,9 @@ from django.utils.text import slugify
 class Causes(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     STATUS_CHOICES = [
-        ('upcoming', 'Upcoming'),
+        ('under_review', 'Under Review'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
         ('ongoing', 'Ongoing'),
         ('completed', 'Completed'),
         ('cancelled', 'Cancelled'),
@@ -22,9 +24,9 @@ class Causes(models.Model):
     # It is up to the application logic to ensure this references a valid user in the user-service.
     target_amount = models.DecimalField(max_digits=10, decimal_places=2)
     current_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
-    location = models.CharField(max_length=255)
+    # start_date = models.DateTimeField()
+    # end_date = models.DateTimeField()
+    # location = models.CharField(max_length=255)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='upcoming')
     cover_image = models.ImageField(upload_to='causes_images/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
