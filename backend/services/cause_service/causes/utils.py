@@ -10,7 +10,7 @@ def validate_organizer_id_with_service(value):
         if response.status_code != 200:
             raise serializers.ValidationError('Organizer not found in user service.')
         user_data = response.json()
-        if not user_data.get('is_organizer', False):
+        if not user_data.get('is_active', False):
             raise serializers.ValidationError('User is not an organizer.')
     except requests.RequestException:
         raise serializers.ValidationError('User service is not reachable.')
