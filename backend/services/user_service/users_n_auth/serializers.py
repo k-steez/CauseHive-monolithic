@@ -10,7 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'first_name', 'last_name', 'password', 'password2', 'is_organizer']
+        fields = ['id', 'email', 'first_name', 'last_name', 'password', 'password2']
         extra_kwargs = {
             'password': {'write_only': True},
             'password2': {'write_only': True},
@@ -21,13 +21,13 @@ class UserSerializer(serializers.ModelSerializer):
         if validated_data['password'] != password2:
             raise serializers.ValidationError({"password2": "Passwords don't match"})
 
-        is_organizer = validated_data.pop('is_organizer', False)
+        # is_organizer = validated_data.pop('is_organizer', False)
         user = User.objects.create_user(
             email=validated_data['email'],
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name'],
             password=validated_data['password'],
-            is_organizer=is_organizer
+            # is_organizer=is_organizer
         )
         return user
 
