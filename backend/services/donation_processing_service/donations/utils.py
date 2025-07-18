@@ -32,10 +32,13 @@ def validate_cause_with_service(value, request=None):
     try:
         response = requests.get(url)
         if response.status_code != 200:
-            raise serializers.ValidationError('Cause service is not reachable.')
+            raise serializers.ValidationError('The cause service is not reachable.')
         cause_data = response.json()
         if not cause_data.get('is_cause', False):
-            raise serializers.ValidationError('Cause is not valid.')
+            raise serializers.ValidationError('This cause is not valid.')
+        # Check for cause status
+        if cause_data.get('status') == 'completed':
+            raise serializers.ValidationError('This cause has reached its target.')
     except requests.RequestException:
-        raise serializers.ValidationError('Cause service is not reachable.')
+        raise serializers.ValidationError('The cause service is not reachable.')
     return value
