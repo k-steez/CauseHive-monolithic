@@ -27,7 +27,7 @@ class Causes(models.Model):
     # start_date = models.DateTimeField()
     # end_date = models.DateTimeField()
     # location = models.CharField(max_length=255)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='upcoming')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='under_review')
     cover_image = models.ImageField(upload_to='causes_images/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField(unique=True, blank=True)
