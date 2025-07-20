@@ -23,9 +23,9 @@ password_urlpatterns = [
 
 urlpatterns = [
     # Authentication
-    path('signup/', register_user, name='signup'),
-    path('login/', LoginView.as_view(), name='login'),
-    path('logout/', LogoutView.as_view(), name='logout'),
+    path('auth/signup/', register_user, name='signup'),
+    path('auth/login/', LoginView.as_view(), name='login'),
+    path('auth/logout/', LogoutView.as_view(), name='logout'),
     path('profile/', UserProfileDetailView.as_view(), name='profile_view'),
     path('users/<uuid:id>/', UserDetailView.as_view(), name='user_detail'),
     path('profile/delete', UserAccountDeleteView.as_view(), name='account_delete'),
