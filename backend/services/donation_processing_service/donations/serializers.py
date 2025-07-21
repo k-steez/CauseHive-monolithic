@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import Donation
 from .utils import validate_cause_with_service, validate_user_id_with_service
 class DonationSerializer(serializers.ModelSerializer):
-    user_id = serializers.UUIDField(required=True)
+    user_id = serializers.UUIDField(required=False, allow_null=True)
     event_or_cause_id = serializers.UUIDField(required=True)
 
     class Meta:
@@ -11,11 +11,11 @@ class DonationSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'donated_at', 'status']
 
     def validate_user_id(self, value):
-        if not validate_user_id_with_service(value):
+        if value is not None and not validate_user_id_with_service(value):
             raise serializers.ValidationError('User id is not valid.')
         return value
 
-    def validate_event_or_cause_id(self, value):
+    def validate_cause_id(self, value):
         if not validate_cause_with_service(value):
             raise serializers.ValidationError('Cause id is not valid.')
         return value

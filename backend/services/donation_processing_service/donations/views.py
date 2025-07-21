@@ -1,8 +1,10 @@
 from django.db.models import Sum, Count
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework import viewsets, permissions
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.status import HTTP_201_CREATED
 
 from .models import Donation
 from .serializers import DonationSerializer
@@ -17,19 +19,24 @@ class DonationViewSet(viewsets.ModelViewSet):
     queryset = Donation.objects.all()
     serializer_class = DonationSerializer
     # Allow any user to view donations
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def create(self, request, *args, **kwargs):
+        data = request.data.copy()
+        user_id = getattr(request, 'user_id', None)
+        data['user_id'] = user_id # Caters for anonymous donations
+
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response(serializer.data, status=HTTP_201_CREATED)
 
     def get_queryset(self):
-        """
-        Optionally restricts the returned donations to a given user,
-        by filtering against a `user_id` query parameter in the URL.
-        e.g., /api/donations/?user_id=some-uuid
-        """
-        queryset = super().get_queryset()
-        user_id = self.request.query_params.get('user_id', None)
-        if user_id is not None:
-            queryset = queryset.filter(user_id=user_id)
-        return queryset
+        user = self.request.user
+        if user and hasattr(user, 'id') and user.is_authenticated:
+            return Donation.objects.filter(user_id=user.id)
+        # Anonymous users have no history
+        return Donation.objects.none()
 
     @action(detail=False, methods=['get'])
     def statistics(self, request):
