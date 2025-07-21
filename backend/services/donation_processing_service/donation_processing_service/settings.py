@@ -32,7 +32,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-USER_SERVICE_URL = "http://localhost:8000/user/auth"
+USER_SERVICE_URL = "http://localhost:8000/user"
 CAUSES_URL = "http://localhost:8001/causes"
 CELERY_BROKER_URL = env("CELERY_BROKER_URL", default="redis://localhost:6379/0")
 
@@ -67,6 +67,7 @@ PAYSTACK_BASE_URL = "https://api.paystack.co"
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'donation_processing_service.authentication.JWTAuthenticationService',
+        # 'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
