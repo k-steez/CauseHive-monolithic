@@ -14,9 +14,11 @@ class CauseCreateView(generics.CreateAPIView):
     serializer_class = CausesSerializer
 
 class CauseListView(generics.ListAPIView):
-    queryset = Causes.objects.all()
     serializer_class = CausesSerializer
     permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        return Causes.objects.exclude(status='under_review')
 
 class CauseDetailView(generics.RetrieveAPIView):
     queryset = Causes.objects.all()
