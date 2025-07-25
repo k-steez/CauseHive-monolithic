@@ -27,6 +27,7 @@ environ.Env.read_env(str(env_file))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
+ADMIN_SERVICE_API_KEY = env('ADMIN_SERVICE_API_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
@@ -50,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'django_filters',
 
     'cause_service',
     'causes',

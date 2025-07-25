@@ -10,9 +10,11 @@ from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.html import strip_tags
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status, generics, permissions
 from rest_framework.decorators import api_view, permission_classes, throttle_classes
 from rest_framework.exceptions import AuthenticationFailed, NotFound
+from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -22,6 +24,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import User, UserProfile
+from .permissions import IsAdminService
 from .serializers import UserSerializer, UserProfileSerializer
 from .throttles import PasswordResetThrottle
 
@@ -176,6 +179,15 @@ class UserDetailView(RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     lookup_field = 'id'
+
+class AdminUserListView(generics.ListAPIView):
+    queryset = User.objects.all()
+    permission_classes = [IsAdminService]
+    serializer_class = UserSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['is_active', 'date_joined']
+    search_fields = ['email', 'first_name', 'last_name']
+    ordering_fields = ['date_joined', 'email']
 
 class UserProfileDetailView(generics.RetrieveUpdateAPIView):
     queryset = UserProfile.objects.all()

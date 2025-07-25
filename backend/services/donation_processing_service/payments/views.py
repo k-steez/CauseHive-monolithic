@@ -1,12 +1,15 @@
 from django.shortcuts import render
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.response import Response
-from rest_framework import viewsets, permissions, status
+from rest_framework import viewsets, permissions, status, generics
 from rest_framework.views import APIView
 from donations.tasks import publish_donation_completed_event
 
 from .models import PaymentTransaction
 from .paystack import Paystack
 from .serializers import PaymentTransactionSerializer
+from .permissions import IsAdminService
 
 # Create your views here.
 class PaymentTransactionViewSet(viewsets.ModelViewSet):
@@ -114,3 +117,12 @@ class PaystackWebhookView(APIView):
             return Response({'error': 'Payment record not found'}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({'status': 'success'}, status=status.HTTP_200_OK)
+
+class AdminPaymentTransactionListView(generics.ListAPIView):
+    queryset = PaymentTransaction.objects.all()
+    serializer_class = PaymentTransactionSerializer
+    permission_classes = [IsAdminService]
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['status', 'transaction_date', 'user_id']
+    search_fields = ['transaction_id', 'email']
+    ordering_fields = ['transaction_date', 'amount']
