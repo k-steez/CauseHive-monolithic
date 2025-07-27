@@ -24,10 +24,11 @@ class Causes(models.Model):
     # It is up to the application logic to ensure this references a valid user in the user-service.
     target_amount = models.DecimalField(max_digits=10, decimal_places=2)
     current_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    rejection_reason = models.TextField(blank=True, null=True),
     # start_date = models.DateTimeField()
     # end_date = models.DateTimeField()
     # location = models.CharField(max_length=255)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='upcoming')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='under_review')
     cover_image = models.ImageField(upload_to='causes_images/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField(unique=True, blank=True)

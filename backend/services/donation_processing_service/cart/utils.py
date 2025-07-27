@@ -62,7 +62,7 @@ def get_user_email_from_service(user_id, request=None):
     Get user email from user service.
     Returns email if found, raises exception if not.
     """
-    user_service_url = getattr(settings, 'USER_SERVICE_URL', 'http://localhost:8000/user/auth')
+    user_service_url = getattr(settings, 'USER_SERVICE_URL', 'http://localhost:8000/user')
     url = f"{user_service_url}/users/{user_id}/"
     headers = {}
     if request and hasattr(request, 'headers'):
