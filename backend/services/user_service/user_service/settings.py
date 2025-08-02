@@ -38,6 +38,9 @@ ALLOWED_HOSTS = ['127.0.0.1', 'localhost',]
 FRONTEND_URL = env('FRONTEND_URL', default='http://localhost:5173')
 BACKEND_URL = env('BACKEND_URL', default='https://localhost:8000')
 
+PAYSTACK_PUBLIC_KEY = env('PAYSTACK_PUBLIC_KEY')
+PAYSTACK_SECRET_KEY = env('PAYSTACK_SECRET_KEY')
+
 
 # User and authentication settings
 AUTH_USER_MODEL = 'users_n_auth.User'

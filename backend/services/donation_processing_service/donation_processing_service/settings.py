@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'donations',
     'cart',
     'payments',
+    'withdrawal_transfer',
 ]
 
 
