@@ -56,8 +56,6 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_framework_simplejwt.token_blacklist',
 
-    'django_celery_beat',
-
     'admin_reporting_service',
     'admin_auth',
     'dashboard',
@@ -111,14 +109,13 @@ SIMPLE_JWT = {
 # Celery Configuration
 CELERY_BROKER_URL = env('CELERY_BROKER_URL', default='redis://localhost:6379/1')
 CELERY_RESULT_BACKEND = env('CELERY_RESULT_BACKEND', default='redis://localhost:6379/2')
-CELERLY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 CELERY_BEAT_SCHEDULE = {
     'aggregate-reports-every-hour': {
         'task': 'dashboard.tasks.generate_fresh_report',
         'schedule': 3600 # every hour
     },
     'poll-new-pending-causes-every-3-mins': {
-        'task': 'notifications.tasks.poll_new_pending_causes',
+        'task': 'dashboard.tasks.poll_new_pending_causes',
         'schedule': 180 # every 3 minutes
     }
 }
@@ -160,11 +157,14 @@ WSGI_APPLICATION = 'admin_reporting_service.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('PGDATABASE'),
-        'USER': env('PGUSER'),
-        'PASSWORD': env('PGPASSWORD'),
-        'HOST': env('PGHOST'),
-        'PORT': env('PGPORT'),
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
+        'HOST': env('DB_HOST'),
+        'PORT': env('DB_PORT'),
+        'OPTIONS': {
+            'sslmode': 'require',
+        }
     }
 }
 
