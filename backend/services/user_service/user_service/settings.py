@@ -38,6 +38,9 @@ ALLOWED_HOSTS = ['127.0.0.1', 'localhost',]
 FRONTEND_URL = env('FRONTEND_URL', default='http://localhost:5173')
 BACKEND_URL = env('BACKEND_URL', default='https://localhost:8000')
 
+PAYSTACK_PUBLIC_KEY = env('PAYSTACK_PUBLIC_KEY')
+PAYSTACK_SECRET_KEY = env('PAYSTACK_SECRET_KEY')
+
 
 # User and authentication settings
 AUTH_USER_MODEL = 'users_n_auth.User'
@@ -178,11 +181,14 @@ WSGI_APPLICATION = 'user_service.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('DB_NAME', default='user_service'),
-        'USER': env('DB_USER'),
-        'PASSWORD': env('DB_PASSWORD'),
-        'HOST': env('DB_HOST', default='localhost'),
-        'PORT': env('DB_PORT', default='5432'),
+        'NAME': env('PGDATABASE', default='user_service'),
+        'USER': env('PGUSER'),
+        'PASSWORD': env('PGPASSWORD'),
+        'HOST': env('PGHOST'),
+        'PORT': env('PGPORT', default='5432'),
+        'OPTIONS': {
+            'sslmode': 'require',  # Use SSL for database connection
+        }
     }
 }
 
