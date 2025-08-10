@@ -29,7 +29,7 @@ SECRET_KEY = env('SECRET_KEY')
 ADMIN_SERVICE_API_KEY = env('ADMIN_SERVICE_API_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = []
 
