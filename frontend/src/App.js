@@ -16,17 +16,17 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Navigate to="/multidonation" replace />} />
+        <Route path="/landingpage" element={<LandingPage />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/sign-in" element={<SignIn />} />
-        <Route path="/landingpage" element={<LandingPage />} />
+        <Route path="/" element={<Navigate to="/landingpage" replace />} />
         <Route path="/causedetailpage" element={<CausedetailPage />} />
         <Route path="/causes" element={<CauseListpage />} />
         <Route path="/donation" element={<Donation />} />
         <Route path="/multidonation" element={<MultiDonation />} />
         <Route path="/testroute" element={<TestRoute />} />
         <Route path="/cartpage" element={<CartPage />} />
-        <Route path="*" element={<Navigate to="/multidonation" replace />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
   );
