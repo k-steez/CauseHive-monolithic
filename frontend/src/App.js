@@ -16,7 +16,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Navigate to="/multidonation" replace />} />
+        <Route path="/" element={<Navigate to="/landingpage" replace />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/landingpage" element={<LandingPage />} />
@@ -26,7 +26,7 @@ function App() {
         <Route path="/multidonation" element={<MultiDonation />} />
         <Route path="/testroute" element={<TestRoute />} />
         <Route path="/cartpage" element={<CartPage />} />
-        <Route path="*" element={<Navigate to="/multidonation" replace />} />
+        <Route path="*" element={<Navigate to="/landingpage" replace />} />
       </Routes>
     </Router>
   );
