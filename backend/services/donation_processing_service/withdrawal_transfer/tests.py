@@ -1,14 +1,9 @@
-# withdrawal_transfer/tests.py
 import uuid
-import json
 from decimal import Decimal
 from unittest.mock import patch, MagicMock
 from django.test import TestCase, override_settings
-from django.urls import reverse
 from rest_framework.test import APITestCase
 from rest_framework import status
-from django.db import transaction
-from django.utils import timezone
 
 from .models import WithdrawalRequest
 from .serializers import WithdrawalRequestSerializer, AdminWithdrawalRequestSerializer, WithdrawalStatisticsSerializer
