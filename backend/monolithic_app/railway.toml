@@ -1,0 +1,10 @@
+version: 2
+build:
+  commands:
+    - pip install -r requirements.txt
+    - python manage.py collectstatic --noinput
+deploy:
+  startCommand: gunicorn causehive_monolith.wsgi:application --bind 0.0.0.0:$PORT
+  healthcheckPath: /
+  healthcheckTimeout: 300
+  restartPolicyType: always
