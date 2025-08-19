@@ -20,8 +20,8 @@ django-allauth>=65.9.0
 cryptography>=45.0.5
 
 # Background Tasks
-celery[redis]>=5.5.3
-redis>=6.2.0
+celery[redis]>=5.4.0,<5.5.0
+redis>=4.5.2,<5.2.2
 
 # Static files and media
 whitenoise>=6.9.0
