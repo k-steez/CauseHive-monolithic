@@ -159,54 +159,20 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'causehive_monolith.wsgi.application'
 
-# Database configuration - Multiple Supabase databases
+# Database configuration - Multiple Supabase databases using connection strings
 # Each service gets its own database
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('USER_SERVICE_DB_NAME'),
-        'USER': env('USER_SERVICE_DB_USER'),
-        'PASSWORD': env('USER_SERVICE_DB_PASSWORD'),
-        'HOST': env('USER_SERVICE_DB_HOST'),
-        'PORT': env('USER_SERVICE_DB_PORT', default='5432'),
-        'OPTIONS': {
-            'sslmode': 'require',
-        }
-    },
-    'causes_db': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('CAUSE_SERVICE_DB_NAME'),
-        'USER': env('CAUSE_SERVICE_DB_USER'),
-        'PASSWORD': env('CAUSE_SERVICE_DB_PASSWORD'),
-        'HOST': env('CAUSE_SERVICE_DB_HOST'),
-        'PORT': env('CAUSE_SERVICE_DB_PORT', default='5432'),
-        'OPTIONS': {
-            'sslmode': 'require',
-        }
-    },
-    'donations_db': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('DONATION_SERVICE_DB_NAME'),
-        'USER': env('DONATION_SERVICE_DB_USER'),
-        'PASSWORD': env('DONATION_SERVICE_DB_PASSWORD'),
-        'HOST': env('DONATION_SERVICE_DB_HOST'),
-        'PORT': env('DONATION_SERVICE_DB_PORT', default='5432'),
-        'OPTIONS': {
-            'sslmode': 'require',
-        }
-    },
-    'admin_db': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('ADMIN_SERVICE_DB_NAME'),
-        'USER': env('ADMIN_SERVICE_DB_USER'),
-        'PASSWORD': env('ADMIN_SERVICE_DB_PASSWORD'),
-        'HOST': env('ADMIN_SERVICE_DB_HOST'),
-        'PORT': env('ADMIN_SERVICE_DB_PORT', default='5432'),
-        'OPTIONS': {
-            'sslmode': 'require',
-        }
-    },
+    'default': env.db('USER_SERVICE_DATABASE_URL', default='postgresql://postgres:password@localhost:5432/causehive_users'),
+    'causes_db': env.db('CAUSE_SERVICE_DATABASE_URL', default='postgresql://postgres:password@localhost:5432/causehive_causes'),
+    'donations_db': env.db('DONATION_SERVICE_DATABASE_URL', default='postgresql://postgres:password@localhost:5432/causehive_donations'),
+    'admin_db': env.db('ADMIN_SERVICE_DATABASE_URL', default='postgresql://postgres:password@localhost:5432/causehive_admin'),
 }
+
+# Ensure SSL is required for all Supabase connections
+for db_config in DATABASES.values():
+    if 'OPTIONS' not in db_config:
+        db_config['OPTIONS'] = {}
+    db_config['OPTIONS']['sslmode'] = 'require'
 
 # Database routing configuration
 DATABASE_ROUTERS = ['causehive_monolith.db_router.DatabaseRouter']
