@@ -24,7 +24,7 @@ env_file = BASE_DIR / ".env"
 environ.Env.read_env(str(env_file))
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY', default='your-development-secret-key-change-in-production')
+SECRET_KEY = env('SECRET_KEY', default='django-insecure-build-time-key-replace-in-production')
 ADMIN_SERVICE_API_KEY = env('ADMIN_SERVICE_API_KEY', default='admin-api-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -159,20 +159,30 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'causehive_monolith.wsgi.application'
 
-# Database configuration - Multiple Supabase databases using connection strings
-# Each service gets its own database
+# Database configuration with connection strings
 DATABASES = {
-    'default': env.db('USER_SERVICE_DATABASE_URL', default='postgresql://postgres:password@localhost:5432/causehive_users'),
-    'causes_db': env.db('CAUSE_SERVICE_DATABASE_URL', default='postgresql://postgres:password@localhost:5432/causehive_causes'),
-    'donations_db': env.db('DONATION_SERVICE_DATABASE_URL', default='postgresql://postgres:password@localhost:5432/causehive_donations'),
-    'admin_db': env.db('ADMIN_SERVICE_DATABASE_URL', default='postgresql://postgres:password@localhost:5432/causehive_admin'),
+    'default': {},
+    'user_service': dj_database_url.parse(
+        env('USER_SERVICE_DATABASE_URL', default='postgresql://user:pass@localhost:5432/user_db'),
+        conn_max_age=600,
+        conn_health_checks=True,
+    ),
+    'cause_service': dj_database_url.parse(
+        env('CAUSE_SERVICE_DATABASE_URL', default='postgresql://user:pass@localhost:5432/cause_db'),
+        conn_max_age=600,
+        conn_health_checks=True,
+    ),
+    'donation_service': dj_database_url.parse(
+        env('DONATION_SERVICE_DATABASE_URL', default='postgresql://user:pass@localhost:5432/donation_db'),
+        conn_max_age=600,
+        conn_health_checks=True,
+    ),
+    'admin_service': dj_database_url.parse(
+        env('ADMIN_SERVICE_DATABASE_URL', default='postgresql://user:pass@localhost:5432/admin_db'),
+        conn_max_age=600,
+        conn_health_checks=True,
+    ),
 }
-
-# Ensure SSL is required for all Supabase connections
-for db_config in DATABASES.values():
-    if 'OPTIONS' not in db_config:
-        db_config['OPTIONS'] = {}
-    db_config['OPTIONS']['sslmode'] = 'require'
 
 # Database routing configuration
 DATABASE_ROUTERS = ['causehive_monolith.db_router.DatabaseRouter']
