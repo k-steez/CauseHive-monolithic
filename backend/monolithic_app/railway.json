@@ -1,7 +1,7 @@
 {
   "build": {
     "builder": "DOCKERFILE",
-    "dockerfilePath": "railway.dockerfile"
+    "dockerfilePath": "Dockerfile"
   },
   "deploy": {
     "startCommand": "python migrate_databases.py all && gunicorn --bind 0.0.0.0:$PORT --workers 3 causehive_monolith.wsgi:application",
