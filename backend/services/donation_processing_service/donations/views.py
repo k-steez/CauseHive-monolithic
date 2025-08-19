@@ -45,7 +45,7 @@ class DonationViewSet(viewsets.ModelViewSet):
     def statistics(self, request):
         queryset = self.get_queryset()
         total_donations = queryset.count()
-        total_amount = queryset.aggregate(Sum('amount'))['total_amount'] or 0
+        total_amount = queryset.aggregate(Sum('amount'))['amount__sum'] or 0
         return Response({
             'total_amount': total_amount,
             'total_donations': total_donations,

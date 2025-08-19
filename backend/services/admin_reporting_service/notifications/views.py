@@ -9,7 +9,7 @@ from .models import AdminNotification
 class AdminNotificationListView(generics.ListAPIView):
     queryset = AdminNotification.objects.all().order_by('-created_at')
     serializer_class = AdminNotificationSerializer
-    permissions_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
 class AdminNotificationMarkReadView(generics.UpdateAPIView):
     queryset = AdminNotification.objects.all()
