@@ -11,6 +11,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from .health_views import health_check, readiness_check
 from rest_framework.routers import DefaultRouter
 
 # Import viewsets for API router - handle gracefully if not available
@@ -45,6 +46,10 @@ if WithdrawalRequestViewSet:
     router.register(r'withdrawals', WithdrawalRequestViewSet, basename='withdrawalrequest')
 
 urlpatterns = [
+    # Health check endpoints for Railway
+    path('api/health/', health_check, name='health_check'),
+    path('api/ready/', readiness_check, name='readiness_check'),
+    
     # Django admin
     path('admin/', admin.site.urls),
     

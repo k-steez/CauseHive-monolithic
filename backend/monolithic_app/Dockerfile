@@ -5,6 +5,7 @@ FROM python:3.11-slim
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV DJANGO_SETTINGS_MODULE=causehive_monolith.settings
+ENV PORT=8000
 
 # Set work directory
 WORKDIR /app
@@ -15,31 +16,56 @@ RUN apt-get update \
         postgresql-client \
         build-essential \
         libpq-dev \
+        curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt
 
 # Copy project
 COPY . .
 
 # Create necessary directories
-RUN mkdir -p staticfiles media
+RUN mkdir -p staticfiles media logs
 
-# Collect static files
-RUN python manage.py collectstatic --noinput --clear
+# Create a non-root user first
+RUN adduser --disabled-password --gecos '' appuser
 
-# Create a non-root user
-RUN adduser --disabled-password --gecos '' appuser && chown -R appuser /app
+# Collect static files (do this before changing user)
+RUN python manage.py collectstatic --noinput --clear || echo "Static files collection failed, continuing..."
+
+# Change ownership and switch to non-root user
+RUN chown -R appuser:appuser /app
 USER appuser
 
 # Expose port
-EXPOSE 8000
+EXPOSE $PORT
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-  CMD python -c "import django; django.setup(); print('Django OK')" || exit 1
+# Health check using the new endpoint
+HEALTHCHECK --interval=30s --timeout=30s --start-period=60s --retries=3 \
+  CMD curl -f http://localhost:$PORT/api/ready/ || exit 1
 
-# Start command - include database migrations
-CMD ["sh", "-c", "python migrate_databases.py all && gunicorn --bind 0.0.0.0:8000 --workers 3 causehive_monolith.wsgi:application"]
+# Create startup script
+RUN echo '#!/bin/bash\n\
+set -e\n\
+echo "Starting CauseHive Monolith..."\n\
+echo "Running database migrations..."\n\
+python migrate_databases.py all || echo "Migration issues detected, continuing..."\n\
+echo "Starting Gunicorn server..."\n\
+exec gunicorn --bind 0.0.0.0:$PORT \
+    --workers 3 \
+    --timeout 120 \
+    --keep-alive 2 \
+    --max-requests 1000 \
+    --max-requests-jitter 50 \
+    --access-logfile - \
+    --error-logfile - \
+    --log-level info \
+    causehive_monolith.wsgi:application' > /app/start.sh
+
+RUN chmod +x /app/start.sh
+
+# Start command
+CMD ["/app/start.sh"]
