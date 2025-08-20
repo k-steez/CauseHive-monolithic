@@ -29,6 +29,24 @@ class User(AbstractUser):
     is_staff = models.BooleanField(default=True)
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(auto_now_add=True)
+    
+    # Fix reverse accessor conflicts with users_n_auth.User
+    groups = models.ManyToManyField(
+        'auth.Group',
+        verbose_name='groups',
+        blank=True,
+        help_text='The groups this user belongs to.',
+        related_name='admin_user_set',
+        related_query_name='admin_user',
+    )
+    user_permissions = models.ManyToManyField(
+        'auth.Permission',
+        verbose_name='user permissions',
+        blank=True,
+        help_text='Specific permissions for this user.',
+        related_name='admin_user_set',
+        related_query_name='admin_user',
+    )
 
     objects = UserManager()
 
