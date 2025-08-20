@@ -66,9 +66,9 @@ def migrate_all_databases():
     """Run migrations on all configured databases with proper app routing"""
     database_apps = {
         'default': ['users_n_auth', 'admin', 'auth', 'contenttypes', 'sessions', 'sites', 'allauth', 'account'],
-        'causes_db': ['causes', 'categories'],
-        'donations_db': ['donations', 'cart', 'payments', 'withdrawal_transfer'],
-        'admin_db': ['admin_auth', 'dashboard', 'auditlog', 'notifications', 'management']
+        'cause_service': ['causes', 'categories'],
+        'donation_service': ['donations', 'cart', 'payments', 'withdrawal_transfer'],
+        'admin_service': ['admin_auth', 'dashboard', 'auditlog', 'notifications', 'management']
     }
     
     success_count = 0
@@ -109,7 +109,7 @@ if __name__ == '__main__':
             print("Usage:")
             print("  python migrate_databases.py all")
             print("  python migrate_databases.py app <app_label> <database>")
-            print("\nDatabases: default, causes_db, donations_db, admin_db")
+            print("\nDatabases: default, cause_service, donation_service, admin_service")
     else:
         success = migrate_all_databases()
         sys.exit(0 if success else 1)
