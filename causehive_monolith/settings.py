@@ -36,6 +36,7 @@ ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['127.0.0.1', 'localhost', '*.
 
 # Frontend and external URLs
 FRONTEND_URL = env('FRONTEND_URL', default='http://localhost:5173')
+BACKEND_URL = env('BACKEND_URL', default='http://localhost:8000')
 
 # User and authentication settings
 AUTH_USER_MODEL = 'users_n_auth.User'
