@@ -164,8 +164,14 @@ TEMPLATES = [
 WSGI_APPLICATION = 'causehive_monolith.wsgi.application'
 
 # Database configuration with connection strings
+import dj_database_url
+
 DATABASES = {
-    'default': {},
+    'default': dj_database_url.parse(
+        env('USER_SERVICE_DATABASE_URL', default='postgresql://user:pass@localhost:5432/user_db'),
+        conn_max_age=600,
+        conn_health_checks=True,
+    ),
     'user_service': dj_database_url.parse(
         env('USER_SERVICE_DATABASE_URL', default='postgresql://user:pass@localhost:5432/user_db'),
         conn_max_age=600,
