@@ -17,14 +17,14 @@ RUN apt-get install -y --no-install-recommends build-essential
 RUN rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first for better caching
-COPY backend/monolithic_app/requirements.txt .
+COPY requirements.txt .
 
 # Install Python dependencies with memory optimization
 RUN pip install --no-cache-dir --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy project files
-COPY backend/monolithic_app/ .
+COPY . .
 
 # Create necessary directories and set permissions
 RUN mkdir -p staticfiles media logs
