@@ -1,232 +1,314 @@
-==
-# CauseHive
-Integral components for the CauseHive Donation App.
+# CauseHive Monolith
 
+A monolithic Django application that combines all CauseHive microservices into a single, deployable application while maintaining separate Supabase databases for each service domain.
 
-# Overview of CauseHive’s Requirements
-CauseHive is a web application designed to connect donors with a wide range of charitable
-events and causes. The platform enables users to easily register, browse and search for events
-or causes, and make secure donations using various payment methods. Users can manage
-their profiles, track their donation history, and receive confirmations and receipts for every
-contribution. The app also allows donors to submit testimonials about their experiences and
-view feedback from others.
-Administrators and organizers have access to a dedicated panel where they can create and
-manage events or causes, oversee user accounts, monitor all donations, and generate detailed
-reports on donation activity and event performance. Security is a core focus, with robust data
-encryption and secure payment processing in place to protect user information.
-Overall, CauseHive streamlines the donation process, making it simple for individuals to support
-meaningful causes, while providing organizers with the tools they need to effectively manage
-and promote their fundraising efforts.
-# 1. User Management
-● User Registration: Users can create accounts with personal details to donate,
-track donations, and manage profiles.
-● User Login/Logout: Registered users can log in and out securely.
-● Profile Management: Users can update their profile with new information, such
-as contact details and donation preferences.
-● Password Recovery: Users can reset their passwords using email or contact
-verification.
-# 2. Event & Cause Catalog
-● Event/Cause Listing: List of active donation events and causes with descriptions
-and goals.
-● Event/Cause Details: View details about each event or cause, including organizer,
-target amount, progress, and updates.
-● Search and Filter: Users can search for events/causes by name, organizer, or
-category, and filter by location, goal, or status.
-● Category Management: Causes and events are organized into categories (e.g.,
-health, education, disaster relief).
-# 3. Making Donations
-● Add to Donation Cart: Users can select one or more causes/events to donate to
-in a single session.
-● View Donation Cart: Users can review selected causes/events and intended
-donation amounts.
-● Update Donation Cart: Users can change donation amounts or remove
-causes/events before proceeding.
-● Save for Later: Users can bookmark causes/events to donate to at a later time.
-# 4. Donation Process
-● Donor Information: Users can enter or confirm their contact and payment
-information.
-● Payment Options: Support for various payment methods (credit/debit card, bank
-transfer, mobile money, etc.).
-● Donation Summary: Display selected causes, donation amounts, transaction
-fees, and total amount.
-● Donation Confirmation: Send confirmation via email or SMS, including a receipt
-and summary.
-# 5. Donation Management
-● Donation Tracking: Users can track the status of their donations and see
-progress updates from organizers.
-● Donation History: Users can view a history of all their past donations with details
-and receipts.
-● Donation Cancellation/Refunds: Users can request cancellation or refunds
-according to policy (if applicable).
-# 6. Reviews and Testimonials
-● Submit Testimonial: Donors can submit testimonials about their giving
-experience or the impact of their donations.
-● View Testimonials: Users can read testimonials and feedback from other donors.
-# 7. Admin Panel
-● Event/Cause Management: Admins/organizers can add, edit, and delete
-events/causes.
-● User Account Management: Admins can manage user accounts.
-● Donation Oversight: Admins can view, verify, and manage all donations.
-● Reporting: Generate reports on donation volumes, user activity, and event/cause
-performance.
-# 8. Security
-● Data Encryption: Sensitive data (personal and payment info) is encrypted.
-● Secure Payment Processing: Secure gateways are used for all financial
-transactions.
-Use Case Diagram (Description)
-User:
-● Access donor support.
-● Provide feedback/testimonials.
-● Browse and view events/causes.
-● View event/cause details.
-● View donation/payment history.
-● Make donations to events/causes.
-● Manage profile via login system.
-Administrator/Organizer:
-● Manage users (view, edit, deactivate).
-● Manage donations (view, track, update, refund).
-● Manage events/causes (edit details, add, delete).
-● Generate reports (donation volumes, user activity, event/cause performance).
-# User Stories
-User Registration and Authentication
-# 1. Donor Registration:
-As a visitor, I want to create an account so I can donate and track my giving
-history.
-# 2. User Login:
-As a registered donor, I want to log in to access my account and donation history.
-# 3. Password Recovery:
-As a user, I want to recover my password if I forget it.
-Event/Cause Browsing and Search
-# 4. Browse Events/Causes:
-As a donor, I want to browse events and causes by category or location.
-# 5. Search Events/Causes:
-As a donor, I want to search for specific events or causes by name or organizer.
-# 6. Event/Cause Details:
-As a donor, I want to view detailed information about an event or cause before
-donating.
-Donation Cart and Checkout
-# 7. Add to Donation Cart:
-As a donor, I want to select multiple causes/events and specify donation
-amounts.
-# 8. View Donation Cart:
-As a donor, I want to review my selected donations before confirming.
-# 9. Remove from Donation Cart:
-As a donor, I want to remove or adjust causes/events in my donation cart.
-# 10. Checkout/Donate:
-As a donor, I want to complete my donation(s) securely.
-Payment and Donation Management
-# 11. Payment Processing:
-As a donor, I want to pay using various methods.
-# 12. Donation Confirmation:
-As a donor, I want to receive a confirmation and receipt.
-# 13. Donation Tracking:
-As a donor, I want to track the status and impact of my donations.
-Account Management
-# 14. View Donation History:
-As a donor, I want to view all my past donations.
-# 15. Update Account Information:
-As a donor, I want to update my personal and payment details.
-Admin/Organizer Functionality
-# 16. Add New Event/Cause:
-As an admin/organizer, I want to add new events or causes.
-# 17. Manage Donations:
-As an admin/organizer, I want to view, verify, and update donation statuses.
-# 18. User Management:
-As an admin, I want to manage donor accounts.
-# Pre- and Post-Conditions (Examples)
-Donor Registration:
-● Pre: Visitor accesses registration page and provides valid info.
-● Post: Account created, user logged in or redirected, confirmation sent.
-# Make a Donation:
-● Pre: User is logged in, has selected causes/events, and entered payment details.
-● Post: Donation processed, confirmation sent, donation appears in user’s history.
-# Add New Event/Cause (Admin):
-● Pre: Admin is logged in and accesses event management.
-● Post: New event/cause is listed and available for donations.
-# Non-Functional Requirements
-● Performance: Website loads quickly and supports many users.
-● Reliability: Platform is available for donations at all times.
-● Security: All sensitive data is encrypted; secure payment processing.
-● Usability: Clean, responsive design; easy navigation for donors and organizers.
-# Glossary
-● User Registration: Creating a donor account.
-● Event/Cause Listing: Displaying active donation opportunities.
-● Donation Cart: Temporary holding area for selected donations.
-● Donation Confirmation: Notification of successful donation.
-● Donation Tracking: Monitoring status and impact of donations.
-● Admin Panel: Backend interface for managing users, events, and donations.
->>>>>>> origin/main
+## 🏗️ Architecture
 
+This monolith combines four previously separate microservices:
 
-<<<<<<< HEAD
-# Getting Started with Create React App
+- **User Service** → `users_n_auth` app (default database)
+- **Cause Service** → `causes`, `categories` apps (causes_db)
+- **Donation Processing Service** → `donations`, `cart`, `payments`, `withdrawal_transfer` apps (donations_db)
+- **Admin Reporting Service** → `admin_auth`, `dashboard`, `auditlog`, `notifications`, `management` apps (admin_db)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### Database Strategy
 
-## Available Scripts
+Each service maintains its own Supabase PostgreSQL database:
+- `causehive_users` - User authentication and profiles
+- `causehive_causes` - Causes and categories
+- `causehive_donations` - Donations, payments, cart, withdrawals
+- `causehive_admin` - Admin users, reports, audit logs
 
-In the project directory, you can run:
+## 🚀 Deployment on Railway
 
-### `npm start`
+### Prerequisites
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+1. **Railway Account**: Sign up at [railway.app](https://railway.app)
+2. **Supabase Databases**: Create 4 separate PostgreSQL databases on Supabase
+3. **Redis Instance**: Either Railway Redis or external Redis service
+4. **Paystack Account**: For payment processing
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Environment Variables
 
-### `npm test`
+Set these environment variables in Railway:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```env
+# Core Django Settings
+SECRET_KEY=your-production-secret-key
+DEBUG=False
+ALLOWED_HOSTS=*.railway.app,your-custom-domain.com
 
-### `npm run build`
+# User Service Database (Supabase #1)
+USER_SERVICE_DB_NAME=causehive_users
+USER_SERVICE_DB_USER=postgres
+USER_SERVICE_DB_PASSWORD=your-password
+USER_SERVICE_DB_HOST=db.your-project.supabase.co
+USER_SERVICE_DB_PORT=5432
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+# Cause Service Database (Supabase #2)
+CAUSE_SERVICE_DB_NAME=causehive_causes
+CAUSE_SERVICE_DB_USER=postgres
+CAUSE_SERVICE_DB_PASSWORD=your-password
+CAUSE_SERVICE_DB_HOST=db.your-project-2.supabase.co
+CAUSE_SERVICE_DB_PORT=5432
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+# Donation Service Database (Supabase #3)
+DONATION_SERVICE_DB_NAME=causehive_donations
+DONATION_SERVICE_DB_USER=postgres
+DONATION_SERVICE_DB_PASSWORD=your-password
+DONATION_SERVICE_DB_HOST=db.your-project-3.supabase.co
+DONATION_SERVICE_DB_PORT=5432
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+# Admin Service Database (Supabase #4)
+ADMIN_SERVICE_DB_NAME=causehive_admin
+ADMIN_SERVICE_DB_USER=postgres
+ADMIN_SERVICE_DB_PASSWORD=your-password
+ADMIN_SERVICE_DB_HOST=db.your-project-4.supabase.co
+ADMIN_SERVICE_DB_PORT=5432
 
-### `npm run eject`
+# Redis (Railway Redis or external)
+CELERY_BROKER_URL=redis://redis:6379/0
+CELERY_RESULT_BACKEND=redis://redis:6379/1
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+# Payment Processing
+PAYSTACK_PUBLIC_KEY=pk_live_your_key
+PAYSTACK_SECRET_KEY=sk_live_your_key
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+# Frontend
+FRONTEND_URL=https://your-frontend-domain.com
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Railway Deployment Steps
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+1. **Connect Repository**:
+   ```bash
+   # Push this monolithic_app to a Git repository
+   git init
+   git add .
+   git commit -m "CauseHive monolith ready for Railway"
+   git branch -M main
+   git remote add origin https://github.com/yourusername/causehive-monolith.git
+   git push -u origin main
+   ```
 
-## Learn More
+2. **Create Railway Project**:
+   - Connect your GitHub repository to Railway
+   - Railway will auto-detect the Django application
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+3. **Add Redis Service**:
+   - In Railway dashboard, add Redis service
+   - Note the Redis connection URL
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+4. **Set Environment Variables**:
+   - Add all environment variables from the list above
+   - Use Railway's environment variable interface
 
-### Code Splitting
+5. **Deploy**:
+   - Railway will automatically build and deploy
+   - Check deployment logs for any issues
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Database Migration
 
-### Analyzing the Bundle Size
+After deployment, run migrations for each database:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```bash
+# Railway CLI (install: npm install -g @railway/cli)
+railway login
+railway shell
 
-### Making a Progressive Web App
+# Inside Railway shell:
+python manage.py migrate --database=default
+python manage.py migrate causes --database=causes_db
+python manage.py migrate categories --database=causes_db
+python manage.py migrate donations --database=donations_db
+python manage.py migrate cart --database=donations_db
+python manage.py migrate payments --database=donations_db
+python manage.py migrate withdrawal_transfer --database=donations_db
+python manage.py migrate admin_auth --database=admin_db
+python manage.py migrate dashboard --database=admin_db
+python manage.py migrate auditlog --database=admin_db
+python manage.py migrate notifications --database=admin_db
+python manage.py migrate management --database=admin_db
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+# Create superuser
+python manage.py createsuperuser
+```
 
-### Advanced Configuration
+## 🛠️ Local Development
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### Setup
 
-### Deployment
+1. **Clone and Setup**:
+   ```bash
+   cd backend/monolithic_app
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   pip install -r requirements.txt
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+2. **Environment Configuration**:
+   ```bash
+   cp .env.example .env
+   # Edit .env with your local database credentials
+   ```
 
-### `npm run build` fails to minify
+3. **Local Database Setup** (using local PostgreSQL):
+   ```bash
+   # Create local databases
+   createdb causehive_users
+   createdb causehive_causes  
+   createdb causehive_donations
+   createdb causehive_admin
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-=====
+4. **Run Migrations**:
+   ```bash
+   ./migrate_all_dbs.sh
+   ```
+
+5. **Start Development Server**:
+   ```bash
+   python manage.py runserver
+   ```
+
+6. **Start Celery Worker** (separate terminal):
+   ```bash
+   celery -A causehive_monolith worker -l info
+   ```
+
+7. **Start Celery Beat** (separate terminal):
+   ```bash
+   celery -A causehive_monolith beat -l info
+   ```
+
+## 📡 API Endpoints
+
+The monolithic application exposes all endpoints under `/api/`:
+
+### User Service
+- `POST /api/user/auth/signup/` - User registration
+- `POST /api/user/auth/login/` - User login
+- `GET /api/user/profile/` - User profile
+- `GET /api/user/users/<id>/` - User details
+
+### Cause Service
+- `GET /api/causes/` - List causes
+- `POST /api/causes/` - Create cause
+- `GET /api/causes/<id>/` - Cause details
+- `GET /api/causes/categories/` - List categories
+
+### Donation Processing
+- `POST /api/donations/` - Create donation
+- `GET /api/donations/` - List donations
+- `POST /api/payments/initialize/` - Initialize payment
+- `GET /api/cart/` - Shopping cart
+- `POST /api/withdrawals/` - Request withdrawal
+
+### Admin Service
+- `GET /api/admin/dashboard/` - Admin dashboard
+- `GET /api/admin/auditlog/` - Audit logs
+- `GET /api/admin/management/users/` - Manage users
+
+## 🔧 Configuration Details
+
+### Database Routing
+
+The `DatabaseRouter` class automatically routes:
+- User auth operations → default database
+- Cause operations → causes_db
+- Donation operations → donations_db  
+- Admin operations → admin_db
+
+### Background Tasks
+
+Celery handles:
+- Report generation (hourly)
+- Payment processing notifications
+- Email notifications
+- Audit log aggregation
+
+### Static Files
+
+- Served by WhiteNoise in production
+- Automatically collected during Railway build
+
+## 🚨 Production Considerations
+
+### Security
+- All database connections use SSL
+- CORS configured for frontend domain
+- Rate limiting on API endpoints
+- JWT token authentication
+
+### Monitoring
+- Django logging configured for Railway
+- Celery task monitoring via Redis
+- Database connection pooling
+
+### Scaling
+- Stateless application design
+- Redis for session storage and caching
+- Separate databases allow independent scaling
+
+## 🔍 Troubleshooting
+
+### Common Issues
+
+1. **Migration Errors**:
+   ```bash
+   # Reset migrations if needed
+   python manage.py migrate --fake-initial --database=default
+   ```
+
+2. **Database Connection Issues**:
+   - Verify Supabase connection strings
+   - Check firewall/security group settings
+   - Ensure SSL is enabled
+
+3. **Static Files Not Loading**:
+   ```bash
+   python manage.py collectstatic --clear --noinput
+   ```
+
+4. **Celery Tasks Not Running**:
+   - Check Redis connection
+   - Verify Celery worker is running
+   - Check task routing configuration
+
+### Railway Logs
+```bash
+railway logs
+```
+
+### Database Queries
+```bash
+# Test database connections
+python manage.py dbshell --database=default
+python manage.py dbshell --database=causes_db
+```
+
+## 📚 Migration from Microservices
+
+If migrating from the existing microservices:
+
+1. Export data from each microservice database
+2. Import to corresponding Supabase databases
+3. Update foreign key relationships if needed
+4. Test all API endpoints
+5. Update frontend API URLs to monolith endpoints
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create feature branch: `git checkout -b feature/amazing-feature`
+3. Commit changes: `git commit -m 'Add amazing feature'`
+4. Push to branch: `git push origin feature/amazing-feature`
+5. Open Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+---
+
+**CauseHive Monolith** - Combining microservices for simplified deployment while maintaining data isolation 🚀
