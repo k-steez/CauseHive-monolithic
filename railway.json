@@ -1,14 +1,3 @@
 {
-  "$schema": "https://railway.app/railway.schema.json",
-  "build": {
-    "builder": "DOCKERFILE",
-    "dockerfilePath": "backend/monolithic_app/Dockerfile",
-    "dockerContext": "backend/monolithic_app"
-  },
-  "deploy": {
-    "restartPolicyType": "ON_FAILURE",
-    "restartPolicyMaxRetries": 10,
-    "healthcheckPath": "/api/ready/",
-    "healthcheckTimeout": 100
-  }
+  "$schema": "https://railway.app/railway.schema.json"
 }
