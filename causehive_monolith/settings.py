@@ -38,6 +38,13 @@ ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['127.0.0.1', 'localhost', '*.
 FRONTEND_URL = env('FRONTEND_URL', default='http://localhost:5173')
 BACKEND_URL = env('BACKEND_URL', default='http://localhost:8000')
 
+# Service URLs for microservice communication
+CAUSE_SERVICE_URL = env('CAUSE_SERVICE_URL', default='http://localhost:8001')
+
+# Payment service configuration
+PAYSTACK_BASE_URL = env('PAYSTACK_BASE_URL', default='https://api.paystack.co')
+PAYSTACK_SECRET_KEY = env('PAYSTACK_SECRET_KEY', default='sk_test_your_secret_key_here')
+
 # User and authentication settings
 AUTH_USER_MODEL = 'users_n_auth.User'
 
