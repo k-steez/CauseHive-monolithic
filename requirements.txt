@@ -14,6 +14,6 @@ paystack==1.5.0
 gunicorn==22.0.0
 dj-database-url==2.1.0
 django-extensions==3.2.3
-
-# Development dependencies (optional)
-django-debug-toolbar>=4.0.0
+django-filter==23.5
+django-cors-headers==4.3.1
+whitenoise==6.6.0
