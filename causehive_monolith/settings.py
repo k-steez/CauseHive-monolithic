@@ -177,35 +177,62 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'causehive_monolith.wsgi.application'
 
-# Database configuration with connection strings
+# Database configuration with a single Supabase URL and schema-based aliases
 import dj_database_url
 
+SUPABASE_DATABASE_URL = env(
+    'SUPABASE_DATABASE_URL',
+    default=env('USER_SERVICE_DATABASE_URL', default='postgresql://postgres.ognvdrrcutkieratvhbn:typeshi_2025@aws-1-eu-north-1.pooler.supabase.com:5432/postgres')
+)
+
 DATABASES = {
-    'default': dj_database_url.parse(
-        env('USER_SERVICE_DATABASE_URL', default='postgresql://user:pass@localhost:5432/user_db'),
-        conn_max_age=600,
-        conn_health_checks=True,
-    ),
-    'user_service': dj_database_url.parse(
-        env('USER_SERVICE_DATABASE_URL', default='postgresql://user:pass@localhost:5432/user_db'),
-        conn_max_age=600,
-        conn_health_checks=True,
-    ),
-    'cause_service': dj_database_url.parse(
-        env('CAUSE_SERVICE_DATABASE_URL', default='postgresql://user:pass@localhost:5432/cause_db'),
-        conn_max_age=600,
-        conn_health_checks=True,
-    ),
-    'donation_service': dj_database_url.parse(
-        env('DONATION_SERVICE_DATABASE_URL', default='postgresql://user:pass@localhost:5432/donation_db'),
-        conn_max_age=600,
-        conn_health_checks=True,
-    ),
-    'admin_service': dj_database_url.parse(
-        env('ADMIN_SERVICE_DATABASE_URL', default='postgresql://user:pass@localhost:5432/admin_db'),
-        conn_max_age=600,
-        conn_health_checks=True,
-    ),
+    # Default: user service schema
+    'default': {
+        **dj_database_url.parse(
+            SUPABASE_DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+        ),
+        'OPTIONS': {
+            'options': '-c search_path=causehive_users,public'
+        }
+    },
+
+    # Cause service
+    'causes_db': {
+        **dj_database_url.parse(
+            SUPABASE_DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+        ),
+        'OPTIONS': {
+            'options': '-c search_path=causehive_causes,public'
+        }
+    },
+
+    # Donation processing service
+    'donations_db': {
+        **dj_database_url.parse(
+            SUPABASE_DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+        ),
+        'OPTIONS': {
+            'options': '-c search_path=causehive_donations,public'
+        }
+    },
+
+    # Admin reporting service
+    'admin_db': {
+        **dj_database_url.parse(
+            SUPABASE_DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+        ),
+        'OPTIONS': {
+            'options': '-c search_path=causehive_admin,public'
+        }
+    },
 }
 
 # Database routing configuration
