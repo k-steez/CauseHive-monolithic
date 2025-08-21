@@ -13,6 +13,12 @@ import CartPage from './screens/CartPage';
 import MultiDonation from './screens/MultiDonation';
 import Notificationspage from './screens/Notificationspage';
 import Desktoppage from './screens/Desktoppage';
+import AdminDashboard from './screens/AdminDashboard';
+import CauseReviewPage from './screens/CauseReviewPage';
+import OrganizerProfilePage from './screens/OrganizerProfilePage';
+import OrganizerProfileSettings from "./screens/OrganizerProfileSettings";
+import RedirectingModalPage from "./RedirectingModalPage";
+import OrganizerSignUpPage from "./screens/OrganizerSignUpPage";
 import CausedetailPage from './screens/CausedetailPage'; // Importing CausedetailPage
 
 
@@ -23,8 +29,6 @@ function App() {
         <Route path="/landingpage" element={<LandingPage />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/sign-in" element={<SignIn />} />
-        <Route path="/" element={<Navigate to="/landingpage" replace />} />
-        <Route path="/causes" element={<CauseListpage />} />
         <Route path="/donation" element={<Donation />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/donationhistory" element={<DonationHistory />} />
@@ -34,7 +38,14 @@ function App() {
          <Route path="/multidonation" element={<MultiDonation />} />
          <Route path="/notificationspage" element={<Notificationspage />} />
           <Route path="/desktoppage" element={<Desktoppage />} />
-          <Route path="/CausedetailPage" element={<CausedetailPage />} />
+          <Route path="/admindashboard" element={<AdminDashboard />} />
+          <Route path="/causedetailpage" element={<CausedetailPage />} />
+          <Route path="/causereviewpage" element={<CauseReviewPage />} />
+          <Route path="/organizerprofilepage" element={<OrganizerProfilePage />} />
+          <Route path="/organizersignuppage" element={<OrganizerSignUpPage />} />
+          <Route path="/redirectingmodalpage" element={<RedirectingModalPage />} />
+          <Route path="/organizerprofilesettings" element={<OrganizerProfileSettings />} />
+           <Route path="/causelistpage" element={<CauseListpage />} />
       <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
