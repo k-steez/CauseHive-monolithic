@@ -32,7 +32,13 @@ ADMIN_SERVICE_API_KEY = env('ADMIN_SERVICE_API_KEY', default='admin-api-key')
 DEBUG = env.bool('DEBUG', default=False)
 
 # Railway deployment settings
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['127.0.0.1', 'localhost', '*.railway.app'])
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[
+    '127.0.0.1',
+    'localhost',
+    '*.railway.app',
+    'causehive.tech',
+    'www.causehive.tech',
+])
 
 # Frontend and external URLs
 FRONTEND_URL = env('FRONTEND_URL', default='http://localhost:5173')
@@ -278,6 +284,20 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
 ]
+
+# Include production frontend/backend origins if provided
+if FRONTEND_URL and FRONTEND_URL not in CORS_ALLOWED_ORIGINS:
+    CORS_ALLOWED_ORIGINS.append(FRONTEND_URL)
+if BACKEND_URL and BACKEND_URL not in CORS_ALLOWED_ORIGINS and BACKEND_URL.startswith('http'):
+    # Allow same-origin API calls from the backend host if needed (e.g., admin tools)
+    CORS_ALLOWED_ORIGINS.append(BACKEND_URL)
+
+# Common production domains (scheme required by Django for CSRF)
+CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS', default=[
+    'https://causehive.tech',
+    'https://www.causehive.tech',
+    'https://*.railway.app',
+])
 
 # CORS settings for Railway deployment
 CORS_ALLOW_CREDENTIALS = True
