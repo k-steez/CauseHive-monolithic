@@ -65,7 +65,7 @@ def migrate_database_safely(db_alias, app_labels=None):
 def migrate_all_databases():
     """Run migrations on all configured databases with proper app routing"""
     database_apps = {
-        'default': ['users_n_auth', 'admin', 'auth', 'contenttypes', 'sessions', 'sites', 'account', 'socialaccount'],
+        'default': ['users_n_auth', 'admin', 'auth', 'contenttypes', 'sessions', 'sites', 'account', 'socialaccount', 'token_blacklist'],
         'causes_db': ['causes', 'categories'],
         'donations_db': ['donations', 'cart', 'payments', 'withdrawal_transfer'],
         'admin_db': ['admin_auth', 'dashboard', 'auditlog', 'notifications', 'management']
