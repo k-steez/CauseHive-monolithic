@@ -15,6 +15,7 @@ from pathlib import Path
 from datetime import timedelta
 import environ
 import dj_database_url
+from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -178,12 +179,17 @@ TEMPLATES = [
 WSGI_APPLICATION = 'causehive_monolith.wsgi.application'
 
 # Database configuration with a single Supabase URL and schema-based aliases
-import dj_database_url
+# Do NOT hardcode credentials; require SUPABASE_DATABASE_URL in production.
+SUPABASE_DATABASE_URL = env('SUPABASE_DATABASE_URL', default=None)
 
-SUPABASE_DATABASE_URL = env(
-    'SUPABASE_DATABASE_URL',
-    default=env('USER_SERVICE_DATABASE_URL', default='postgresql://postgres.ognvdrrcutkieratvhbn:typeshi_2025@aws-1-eu-north-1.pooler.supabase.com:5432/postgres')
-)
+if not SUPABASE_DATABASE_URL:
+    if DEBUG:
+        # Local/dev fallback only
+        SUPABASE_DATABASE_URL = env('USER_SERVICE_DATABASE_URL', default='postgresql://user:pass@localhost:5432/postgres')
+    else:
+        raise ImproperlyConfigured(
+            "SUPABASE_DATABASE_URL is not set. Configure it in your environment."
+        )
 
 DATABASES = {
     # Default: user service schema
