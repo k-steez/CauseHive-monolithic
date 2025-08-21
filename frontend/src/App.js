@@ -17,7 +17,7 @@ import AdminDashboard from './screens/AdminDashboard';
 import CauseReviewPage from './screens/CauseReviewPage';
 import OrganizerProfilePage from './screens/OrganizerProfilePage';
 import OrganizerProfileSettings from "./screens/OrganizerProfileSettings";
-import RedirectingModalPage from "./RedirectingModalPage";
+import RedirectingModal from "./RedirectingModal";
 import OrganizerSignUpPage from "./screens/OrganizerSignUpPage";
 import CausedetailPage from './screens/CausedetailPage'; // Importing CausedetailPage
 
@@ -43,7 +43,7 @@ function App() {
           <Route path="/causereviewpage" element={<CauseReviewPage />} />
           <Route path="/organizerprofilepage" element={<OrganizerProfilePage />} />
           <Route path="/organizersignuppage" element={<OrganizerSignUpPage />} />
-          <Route path="/redirectingmodalpage" element={<RedirectingModalPage />} />
+          <Route path="/redirectingmodal" element={<RedirectingModal />} />
           <Route path="/organizerprofilesettings" element={<OrganizerProfileSettings />} />
            <Route path="/causelistpage" element={<CauseListpage />} />
       <Route path="*" element={<Navigate to="/" replace />} />
