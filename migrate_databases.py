@@ -23,6 +23,19 @@ SCHEMAS_BY_ALIAS = {
     'admin_db': 'causehive_admin',
 }
 
+def ensure_schema_exists(db_alias):
+    """Ensure the target schema exists for the given database alias."""
+    schema = SCHEMAS_BY_ALIAS.get(db_alias)
+    if not schema:
+        return
+    try:
+        with connections[db_alias].cursor() as cursor:
+            # Create schema if missing; no-op if it exists
+            cursor.execute(f"CREATE SCHEMA IF NOT EXISTS {schema};")
+        print(f"   • ensured schema exists: {schema}")
+    except Exception as e:
+        print(f"   • could not ensure schema '{schema}': {e}")
+
 def _print_db_diagnostics(db_alias):
     """Print connection diagnostics: search_path, current schema, and table count in target schema."""
     try:
@@ -71,6 +84,9 @@ def migrate_database_safely(db_alias, app_labels=None):
     # Check connection first
     if not check_database_connection(db_alias):
         return False
+
+    # Ensure target schema exists before migrating (prevents fallback to public)
+    ensure_schema_exists(db_alias)
     
     try:
         if app_labels:
