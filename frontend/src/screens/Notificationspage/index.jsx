@@ -29,7 +29,7 @@ const NotificationsPage = () => {
         toast.info('Showing sample notifications');
       }
     })();
-  }, []);
+  }, [toast]);
 
   const filtered = useMemo(() => {
     if (!searchTerm) return items;
