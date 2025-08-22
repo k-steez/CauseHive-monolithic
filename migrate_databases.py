@@ -16,6 +16,36 @@ from django.core.management.base import CommandError
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'causehive_monolith.settings')
 django.setup()
 
+SCHEMAS_BY_ALIAS = {
+    'default': 'causehive_users',
+    'causes_db': 'causehive_causes',
+    'donations_db': 'causehive_donations',
+    'admin_db': 'causehive_admin',
+}
+
+def _print_db_diagnostics(db_alias):
+    """Print connection diagnostics: search_path, current schema, and table count in target schema."""
+    try:
+        schema = SCHEMAS_BY_ALIAS.get(db_alias)
+        with connections[db_alias].cursor() as cursor:
+            cursor.execute("SHOW search_path;")
+            search_path = cursor.fetchone()[0]
+            cursor.execute("SELECT current_schema();")
+            current_schema = cursor.fetchone()[0]
+            table_count = None
+            if schema:
+                cursor.execute(
+                    "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = %s;",
+                    [schema],
+                )
+                table_count = cursor.fetchone()[0]
+        print(f"   • search_path={search_path}")
+        print(f"   • current_schema()={current_schema}")
+        if schema is not None:
+            print(f"   • tables in '{schema}': {table_count}")
+    except Exception as e:
+        print(f"   • (diagnostics unavailable): {e}")
+
 def check_database_connection(db_alias, max_retries=5, delay=2):
     """Check if database is accessible with retries"""
     for attempt in range(max_retries):
@@ -23,6 +53,7 @@ def check_database_connection(db_alias, max_retries=5, delay=2):
             conn = connections[db_alias]
             conn.ensure_connection()
             print(f"✅ Database {db_alias} connection successful")
+            _print_db_diagnostics(db_alias)
             return True
         except Exception as e:
             print(f"⚠️  Database {db_alias} connection attempt {attempt + 1}/{max_retries} failed: {e}")
@@ -50,10 +81,13 @@ def migrate_database_safely(db_alias, app_labels=None):
             execute_from_command_line(['manage.py', 'migrate', '--database', db_alias])
         
         print(f"✅ Successfully migrated {db_alias}")
+        # Print diagnostics after migration as well
+        _print_db_diagnostics(db_alias)
         return True
     except CommandError as e:
         if "No migrations to apply" in str(e):
             print(f"ℹ️  No migrations needed for {db_alias}")
+            _print_db_diagnostics(db_alias)
             return True
         else:
             print(f"❌ Migration error for {db_alias}: {e}")
