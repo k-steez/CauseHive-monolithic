@@ -23,6 +23,18 @@ SCHEMAS_BY_ALIAS = {
     'admin_db': 'causehive_admin',
 }
 
+def set_search_path(db_alias):
+    """Explicitly set search_path for the given alias to its schema,public."""
+    schema = SCHEMAS_BY_ALIAS.get(db_alias)
+    if not schema:
+        return
+    try:
+        with connections[db_alias].cursor() as cursor:
+            cursor.execute(f"SET search_path TO {schema}, public;")
+        print(f"   • set search_path to: {schema},public")
+    except Exception as e:
+        print(f"   • could not set search_path for {db_alias}: {e}")
+
 def ensure_schema_exists(db_alias):
     """Ensure the target schema exists for the given database alias."""
     schema = SCHEMAS_BY_ALIAS.get(db_alias)
@@ -66,6 +78,8 @@ def check_database_connection(db_alias, max_retries=5, delay=2):
             conn = connections[db_alias]
             conn.ensure_connection()
             print(f"✅ Database {db_alias} connection successful")
+            # enforce search_path right after connection
+            set_search_path(db_alias)
             _print_db_diagnostics(db_alias)
             return True
         except Exception as e:
@@ -87,6 +101,8 @@ def migrate_database_safely(db_alias, app_labels=None):
 
     # Ensure target schema exists before migrating (prevents fallback to public)
     ensure_schema_exists(db_alias)
+    # Enforce search_path before running migrations
+    set_search_path(db_alias)
     
     try:
         if app_labels:
