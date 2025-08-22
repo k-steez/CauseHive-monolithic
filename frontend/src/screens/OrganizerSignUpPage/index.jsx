@@ -2,7 +2,7 @@ import React from 'react';
 import styles from '../Signup/styles.module.css';
 import { FaUser, FaLock } from 'react-icons/fa';
 
-const SignIn = () => {
+const OrganizerSignUpPage = () => {
   return (
     <div className={styles.signupPage}>
       <header className={styles.header}>
@@ -29,11 +29,9 @@ const SignIn = () => {
 
       <main className={styles.mainContent}>
         <h1 className={styles.welcome}>
-          Welcome back! <span role="img" aria-label="person waving">🧑‍🤝‍🧑</span>
+          Sign into Your Administrator account <span role="img" aria-label="person waving">🧑‍🤝‍🧑</span>
         </h1>
-        <p className={styles.subtext}>
-          Glad to have you back
-        </p>
+        
 
         <form className={styles.form}>
           <div className={styles.inputGroup}>
@@ -70,7 +68,7 @@ const SignIn = () => {
             {/* Social login buttons can be added here */}
           </div>
 
-          <button type="submit" className={styles.signInButton}>Sign In</button>
+          <button type="submit" className={styles.signInButton}>Sign in</button>
         </form>
       </main>
 
@@ -82,4 +80,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default OrganizerSignUpPage;

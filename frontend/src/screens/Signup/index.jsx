@@ -5,7 +5,7 @@ import googleLogo from '../../assets/google-logo.svg';
 import facebookLogo from '../../assets/facebook-logo.svg';
 import { Link } from 'react-router-dom';
 
-const OrganiserSignup = () => {
+const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -120,4 +120,4 @@ const OrganiserSignup = () => {
   );
 };
 
-export default OrganiserSignup;
+export default Signup;

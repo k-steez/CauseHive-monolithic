@@ -1,97 +1,148 @@
-import React, { useState } from 'react';
-import styles from './styles.module.css';
+import React, { useMemo, useState } from "react";
+import styles from "./styles.module.css";
 
-import { useNavigate } from 'react-router-dom';
-
-// Sidebar icons omitted for brevity (assumed already implemented)
-
-const CartIcon = () => (
-  <svg width="24" height="24" fill="#2f3e46" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-    <path d="M7 18c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm10 0c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm-12.83-2l1.72-7h11.22l1.72 7h-14.66zm15.83-9h-16l-1-4h-2v2h1l3.6 7.59-1.35 2.44c-.16.28-.25.61-.25.97 0 1.104.896 2 2 2h12v-2h-11.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49-1.74-1z"/>
+/* --- Inline SVG icon helper --- */
+const Icon = ({ path, box = "0 0 24 24", size = 22, label }) => (
+  <svg
+    className={styles.iconSvg}
+    viewBox={box}
+    width={size}
+    height={size}
+    aria-hidden={label ? undefined : true}
+    role={label ? "img" : "presentation"}
+  >
+    {label ? <title>{label}</title> : null}
+    <path d={path} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
 
-const CartItem = ({ selected, onSelect }) => {
-  return (
-    <div className={styles.cartItem}>
-      <div
-        className={selected ? styles.checkboxSelected : styles.checkbox}
-        onClick={onSelect}
-        role="checkbox"
-        aria-checked={selected}
-        tabIndex={0}
-        onKeyDown={(e) => { if (e.key === 'Enter') onSelect(); }}
-      />
-      <div className={styles.cartItemInfo}>
-        <span>Help Agnes go to school</span>
-        <span>Goal: GHS3000</span>
-        <span>Created by: Janet Ofori</span>
-      </div>
-      <div className={styles.priceBox}>
-        <span>GHS 0</span>
-        <button className={styles.dropdownButton} aria-label="Price dropdown">&#9660;</button>
-      </div>
-    </div>
-  );
-};
+/* --- Sidebar icons (inline SVG paths) --- */
+const useSidebarIcons = () => useMemo(() => ([
+  { key: "menu",     path: "M3 6h18M3 12h18M3 18h18", label: "Menu" },
+  { key: "grid",     path: "M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z", label: "Dashboard" },
+  { key: "heart",    path: "M20.8 8.6a4.8 4.8 0 0 0-6.8 0L12 10.6l-2-2a4.8 4.8 0 0 0-6.8 6.8l2 2L12 22l6.8-4.6 2-2a4.8 4.8 0 0 0 0-6.8z", label: "Favourites" },
+  { key: "chat",     path: "M21 15a4 4 0 0 1-4 4H8l-5 3 1.5-4A4 4 0 0 1 4 6h13a4 4 0 0 1 4 4z", label: "Messages" },
+  { key: "layers",   path: "M12 2l9 5-9 5-9-5 9-5zm-7 9l7 4 7-4m-14 4l7 4 7-4", label: "Layers" },
+  { key: "gift",     path: "M20 12v8H4v-8m16 0H4m16-4H4v4h16V8zm-8 0V4m0 0a2 2 0 1 1 0 4m0-4a2 2 0 1 0 0 4", label: "Gifts" },
+  { key: "user",     path: "M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8z", label: "Profile" },
+  { key: "settings", path: "M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zm8-3.5l-1.5-.9.3-1.7-1.7-1.7-1.7.3L14.5 4h-5L8.6 6l-1.7-.3-1.7 1.7.3 1.7L4 12l1.5.9-.3 1.7 1.7 1.7 1.7-.3L9.5 20h5l.9-1.5 1.7.3 1.7-1.7-.3-1.7L20 12z", label: "Settings" },
+  { key: "power",    path: "M12 2v8m6.4-4.4a8 8 0 1 1-12.8 0", label: "Power" },
+]), []);
 
 const CartPage = () => {
-  const navigate = useNavigate();
-  const [selectedItems, setSelectedItems] = useState([true, true, false, false, false, false]);
+  const icons = useSidebarIcons();
 
-  const handleLogout = () => {
-    navigate('/sign-in');
-  };
+  const initial = Array.from({ length: 6 }, (_, i) => ({
+    id: i + 1,
+    title: "Help Agnes go to school",
+    goal: "GHS3000",
+    creator: "Janet Ofori",
+    amount: 0,
+  }));
 
-  const toggleSelect = (index) => {
-    const newSelected = [...selectedItems];
-    newSelected[index] = !newSelected[index];
-    setSelectedItems(newSelected);
-  };
+  const [selected, setSelected] = useState({ 1: true, 2: true }); // top two selected as in mock
 
-  const selectedCount = selectedItems.filter(Boolean).length;
+  const toggleRow = (id) => setSelected((prev) => ({ ...prev, [id]: !prev[id] }));
+  const selectedCount = Object.values(selected).filter(Boolean).length;
 
   return (
-    <div className={styles.container}>
-      {/* Sidebar */}
+    <div className={styles.page}>
+      {/* LEFT SIDEBAR */}
       <aside className={styles.sidebar}>
-        {/* Sidebar buttons with icons and logout handler */}
-        {/* ... (assumed implemented as before) */}
+        <div className={styles.sidebarTop}>
+          <button className={`${styles.sideIcon} ${styles.iconPrimary}`} aria-label="Menu">
+            <Icon path={icons[0].path} label="Menu" />
+          </button>
+          <div className={styles.sideStack}>
+            {icons.slice(1, 6).map((ic) => (
+              <button key={ic.key} className={styles.sideIcon} aria-label={ic.label}>
+                <Icon path={ic.path} />
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className={styles.sidebarBottom}>
+          <button className={styles.sideIcon} aria-label="Profile">
+            <Icon path={icons[6].path} />
+          </button>
+          <button className={styles.sideIcon} aria-label="Settings">
+            <Icon path={icons[7].path} />
+          </button>
+          <button className={`${styles.sideIcon} ${styles.power}`} aria-label="Power">
+            <Icon path={icons[8].path} />
+          </button>
+        </div>
       </aside>
 
-      {/* Main content */}
-      <main className={styles.mainContent}>
-        <header className={styles.header}>
-          <h1 className={styles.logo}>CauseHive.</h1>
-          <h2 className={styles.title}>Your Cart</h2>
-          <input type="text" placeholder="Search" className={styles.searchInput} />
-          <div className={styles.userAvatar}>
-            <img src="/path/to/avatar.png" alt="User Avatar" />
-            <button className={styles.dropdownButton} aria-label="User menu">&#9660;</button>
-          </div>
-        </header>
+      {/* MAIN CONTENT */}
+      <main className={styles.content}>
+        {/* Top bar */}
+        <div className={styles.topbar}>
+          <div className={styles.brand}>CauseHive<span className={styles.brandDot}>.</span></div>
 
-        <section className={styles.filters}>
-          <div className={styles.filterInputWrapper}>
-            <input type="text" placeholder="filter by" className={styles.filterInput} />
-            <button className={styles.dropdownButton} aria-label="Filter dropdown">&#9660;</button>
+          <div className={styles.searchWrap}>
+            <input className={styles.search} placeholder="Search Causes" />
           </div>
-          <div className={styles.filterInputWrapper}>
-            <input type="text" className={styles.filterInput} />
-            <button className={styles.dropdownButtonAlt} aria-label="Filter dropdown">&#9660;</button>
-          </div>
-        </section>
 
-        <section className={styles.cartList}>
-          {selectedItems.map((selected, i) => (
-            <CartItem key={i} selected={selected} onSelect={() => toggleSelect(i)} />
+          <div className={styles.userWrap}>
+            <div className={styles.avatar}>
+              <span className={styles.avatarBadge} />
+            </div>
+            <div className={styles.avatarDropdown}>
+              <span className={styles.caret}>▾</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Filters Row */}
+        <div className={styles.filtersRow}>
+          <div className={styles.filterPill}>
+            <input className={styles.filterInput} placeholder="filter by" />
+            <span className={styles.pillCaret}>▾</span>
+          </div>
+          <div className={styles.filterPill}>
+            <input className={styles.filterInput} placeholder="" />
+            <span className={styles.pillCaret}>▾</span>
+          </div>
+        </div>
+
+        {/* Title */}
+        <h1 className={styles.title}>Your Cart</h1>
+
+        {/* List */}
+        <div className={styles.list}>
+          {initial.map((row) => (
+            <div key={row.id} className={styles.row}>
+              {/* left select */}
+              <button
+                onClick={() => toggleRow(row.id)}
+                className={`${styles.tick} ${selected[row.id] ? styles.tickOn : ""}`}
+                aria-pressed={!!selected[row.id]}
+                aria-label={`Select ${row.title}`}
+              />
+              {/* card */}
+              <div className={styles.card}>
+                <div className={styles.cardMeta}>
+                  <span className={styles.cardTitle}>{row.title}</span>
+                  <span className={styles.cardDim}>Goal: {row.goal}</span>
+                  <span className={styles.cardDim}>Created by: {row.creator}</span>
+                </div>
+
+                <div className={styles.amountBox}>
+                  <span className={styles.amountText}>GHS {row.amount}</span>
+                  <span className={styles.amountCaret}>▾</span>
+                </div>
+              </div>
+            </div>
           ))}
-        </section>
+        </div>
 
-        <footer className={styles.footer}>
-          <span>{selectedCount} selected</span>
-          <button className={styles.checkoutButton}>Checkout</button>
-        </footer>
+        {/* Bottom bar */}
+        <div className={styles.checkoutBar}>
+          <div className={styles.selectedText}>{selectedCount} selected</div>
+          <button className={styles.checkoutBtn}>Checkout</button>
+        </div>
       </main>
     </div>
   );

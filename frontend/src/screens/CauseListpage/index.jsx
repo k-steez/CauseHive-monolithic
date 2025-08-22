@@ -1,249 +1,146 @@
 import React, { useState } from 'react';
 import styles from './styles.module.css';
-
-// Sidebar icons as SVG components matching the design
-const HamburgerIcon = () => (
-  <svg width="24" height="24" fill="#8b8b8b" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-    <rect y="4" width="24" height="2" rx="1" />
-    <rect y="11" width="24" height="2" rx="1" />
-    <rect y="18" width="24" height="2" rx="1" />
-  </svg>
-);
-
-const GridIcon = ({ active }) => (
-  <svg width="24" height="24" fill={active ? '#2f3e46' : '#b0b0b0'} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-    <rect x="3" y="3" width="7" height="7" rx="1" />
-    <rect x="14" y="3" width="7" height="7" rx="1" />
-    <rect x="3" y="14" width="7" height="7" rx="1" />
-    <rect x="14" y="14" width="7" height="7" rx="1" />
-  </svg>
-);
-
-const HeartIcon = ({ active }) => (
-  <svg width="24" height="24" fill={active ? '#2f3e46' : '#b0b0b0'} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-    <path d="M12 21s-1-.45-2.1-1.35C7.4 17.9 4 15.36 4 11.5 4 8.42 6.42 6 9.5 6c1.54 0 3.04.99 3.5 2.44C13.46 6.99 14.96 6 16.5 6 19.58 6 22 8.42 22 11.5c0 3.86-3.4 6.4-5.9 8.15C13 20.55 12 21 12 21z" />
-  </svg>
-);
-
-const ChatIcon = ({ active }) => (
-  <svg width="24" height="24" fill={active ? '#2f3e46' : '#b0b0b0'} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-    <path d="M4 4h16v12H5.17L4 17.17V4z" />
-  </svg>
-);
-
-const BooksIcon = ({ active }) => (
-  <svg width="24" height="24" fill={active ? '#2f3e46' : '#b0b0b0'} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-    <rect x="3" y="4" width="18" height="16" rx="2" ry="2" />
-    <line x1="3" y1="10" x2="21" y2="10" />
-    <line x1="3" y1="14" x2="21" y2="14" />
-  </svg>
-);
-
-const LayersIcon = ({ active }) => (
-  <svg width="24" height="24" fill={active ? '#2f3e46' : '#b0b0b0'} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-    <path d="M12 2L1 7l11 5 9-4.09V17h2V7L12 2z" />
-  </svg>
-);
-
-const CalendarIcon = ({ active }) => (
-  <svg width="24" height="24" fill={active ? '#2f3e46' : '#b0b0b0'} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-    <line x1="16" y1="2" x2="16" y2="6" />
-    <line x1="8" y1="2" x2="8" y2="6" />
-    <line x1="3" y1="10" x2="21" y2="10" />
-  </svg>
-);
-
-const UserIcon = ({ active }) => (
-  <svg width="24" height="24" fill={active ? '#2f3e46' : '#b0b0b0'} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-    <circle cx="12" cy="7" r="4" />
-    <path d="M5.5 21a6.5 6.5 0 0113 0" />
-  </svg>
-);
-
-const GearIcon = ({ active }) => (
-  <svg width="24" height="24" fill={active ? '#2f3e46' : '#b0b0b0'} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-    <circle cx="12" cy="12" r="3" />
-    <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33h.09a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51h.09a1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82v.09a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" />
-  </svg>
-);
-
-const PowerIcon = ({ active }) => (
-  <svg width="24" height="24" fill={active ? '#2f3e46' : '#b0b0b0'} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-    <path d="M12 2v10" />
-    <circle cx="12" cy="17" r="5" />
-  </svg>
-);
-
-const CartIcon = () => (
-  <svg width="24" height="24" fill="#2f3e46" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-    <path d="M7 18c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm10 0c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm-12.83-2l1.72-7h11.22l1.72 7h-14.66zm15.83-9h-16l-1-4h-2v2h1l3.6 7.59-1.35 2.44c-.16.28-.25.61-.25.97 0 1.104.896 2 2 2h12v-2h-11.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49-1.74-1z"/>
-  </svg>
-);
-
-const CauseCard = ({ title, description }) => (
-  <div className={styles.causeCard}>
-    <p><strong><a href="#" className={styles.causeLink}>{title}</a></strong></p>
-    <p><a href="#" className={styles.causeLink}>{description}</a></p>
-  </div>
-);
+import PaulStatamImage from '../../assets/PaulStatamImage.png';
+import Causelist_image1 from '../../assets/Causelist_image1.png';
+import Causelist_image2 from '../../assets/Causelist_image2.png';
 
 const CauseListpage = () => {
-  const [activeIcon, setActiveIcon] = useState('grid');
+  const [timeFrame, setTimeFrame] = useState('One week');
+  const [cartCount, setCartCount] = useState(2);
 
-  const causes = [
-    {
-      title: 'Donation for clean water in Kenya',
-      description: 'Providing access to safe and clean drinking water for rural communities.',
-    },
-    {
-      title: 'Support education for children in India',
-      description: 'Helping underprivileged children get quality education and school supplies.',
-    },
-    {
-      title: 'Medical aid for refugees in Syria',
-      description: 'Supplying essential medical care and medicines to displaced families.',
-    },
-    {
-      title: 'Reforestation project in the Amazon',
-      description: 'Planting trees to restore the rainforest and combat climate change.',
-    },
-    {
-      title: 'Food relief for homeless in New York',
-      description: 'Distributing meals and food packages to homeless individuals and families.',
-    },
-    {
-      title: 'Empowering women entrepreneurs in Africa',
-      description: 'Providing training and microloans to women starting small businesses.',
-    },
-    {
-      title: 'Disaster relief for hurricane victims',
-      description: 'Offering emergency supplies and shelter to those affected by hurricanes.',
-    },
-    {
-      title: 'Animal rescue and shelter support',
-      description: 'Caring for abandoned animals and funding local shelters.',
-    },
+  const pendingCauses = [
+    { id: 1, image: Causelist_image1, title: 'Donation for riverside chat in Nuevo', description: 'Seeking to support indigenous locals l...' },
+    { id: 2, image: Causelist_image2, title: 'Donation for riverside chat in Nuevo', description: 'Seeking to support indigenous locals l...' },
+    { id: 3, title: 'Donation for riverside chat in Nuevo', description: 'Seeking to support indigenous locals l...' },
+    { id: 4, title: 'Donation for riverside chat in Nuevo', description: 'Seeking to support indigenous locals l...' },
+    { id: 5, title: 'Donation for riverside chat in Nuevo', description: 'Seeking to support indigenous locals l...' },
+    { id: 6, title: 'Donation for riverside chat in Nuevo', description: 'Seeking to support indigenous locals l...' },
+    { id: 7, title: 'Donation for riverside chat in Nuevo', description: 'Seeking to support indigenous locals l...' },
+    { id: 8, title: 'Donation for riverside chat in Nuevo', description: 'Seeking to support indigenous locals l...' },
   ];
 
-  const handleIconClick = (iconName) => {
-    setActiveIcon(iconName);
+  const handleIconClick = (item) => {
+    console.log(`${item} clicked`);
+  };
+
+  const handleAddToCart = (id) => {
+    console.log(`Added to cart: ${id}`);
+    setCartCount(cartCount + 1);
   };
 
   return (
     <div className={styles.container}>
-      {/* Sidebar */}
       <aside className={styles.sidebar}>
-        <div className={styles.sidebarTop}>
-          <a
-            href="#"
-            className={activeIcon === 'hamburger' ? styles.sidebarIconActive : styles.sidebarIcon}
-            onClick={() => handleIconClick('hamburger')}
-          >
-            <HamburgerIcon />
-          </a>
-          <a
-            href="#"
-            className={activeIcon === 'grid' ? styles.sidebarIconActive : styles.sidebarIcon}
-            onClick={() => handleIconClick('grid')}
-          >
-            <GridIcon active={activeIcon === 'grid'} />
-          </a>
-          <a
-            href="#"
-            className={activeIcon === 'heart' ? styles.sidebarIconActive : styles.sidebarIcon}
-            onClick={() => handleIconClick('heart')}
-          >
-            <HeartIcon active={activeIcon === 'heart'} />
-          </a>
-          <a
-            href="#"
-            className={activeIcon === 'chat' ? styles.sidebarIconActive : styles.sidebarIcon}
-            onClick={() => handleIconClick('chat')}
-          >
-            <ChatIcon active={activeIcon === 'chat'} />
-          </a>
-          <a
-            href="#"
-            className={activeIcon === 'books' ? styles.sidebarIconActive : styles.sidebarIcon}
-            onClick={() => handleIconClick('books')}
-          >
-            <BooksIcon active={activeIcon === 'books'} />
-          </a>
-          <a
-            href="#"
-            className={activeIcon === 'layers' ? styles.sidebarIconActive : styles.sidebarIcon}
-            onClick={() => handleIconClick('layers')}
-          >
-            <LayersIcon active={activeIcon === 'layers'} />
-          </a>
-          <a
-            href="#"
-            className={activeIcon === 'calendar' ? styles.sidebarIconActive : styles.sidebarIcon}
-            onClick={() => handleIconClick('calendar')}
-          >
-            <CalendarIcon active={activeIcon === 'calendar'} />
-          </a>
-        </div>
-        <div className={styles.sidebarBottom}>
-          <a
-            href="#"
-            className={activeIcon === 'user' ? styles.sidebarIconActive : styles.sidebarIcon}
-            onClick={() => handleIconClick('user')}
-          >
-            <UserIcon active={activeIcon === 'user'} />
-          </a>
-          <a
-            href="#"
-            className={activeIcon === 'gear' ? styles.sidebarIconActive : styles.sidebarIcon}
-            onClick={() => handleIconClick('gear')}
-          >
-            <GearIcon active={activeIcon === 'gear'} />
-          </a>
-          <a
-            href="#"
-            className={activeIcon === 'power' ? styles.sidebarIconActive : styles.sidebarIcon}
-            onClick={() => handleIconClick('power')}
-          >
-            <PowerIcon active={activeIcon === 'power'} />
-          </a>
-        </div>
+        <a href="#" onClick={() => handleIconClick('Menu')} className={styles.icon}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#666">
+            <rect y="6" width="24" height="2" rx="1" />
+            <rect y="11" width="24" height="2" rx="1" />
+            <rect y="16" width="24" height="2" rx="1" />
+          </svg>
+        </a>
+        <a href="#" onClick={() => handleIconClick('UI Elements')} className={styles.icon}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#666">
+            <path d="M3 13h8v8H3zm0-10h8v8H3zm10 0h8v8h-8zm0 10h8v8h-8z" />
+          </svg>
+        </a>
+        <a href="#" onClick={() => handleIconClick('Favorites')} className={styles.icon}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#666">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+          </svg>
+        </a>
+        <a href="#" onClick={() => handleIconClick('File Manager')} className={styles.icon}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#666">
+            <path d="M6 2c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6H6zm7 7V3.5L18.5 9H13z" />
+          </svg>
+        </a>
+        <a href="#" onClick={() => handleIconClick('Calender')} className={styles.icon}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#666">
+            <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V8h14v12z" />
+          </svg>
+        </a>
+        <a href="#" onClick={() => handleIconClick('Profile')} className={styles.icon}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#666">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" />
+          </svg>
+        </a>
+        <a href="#" onClick={() => handleIconClick('Settings')} className={styles.icon}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#666">
+            <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.47-.12-.61l-2.03-1.58zm-5.14 1.06c-1.6 0-2.9-1.3-2.9-2.9s1.3-2.9 2.9-2.9 2.9 1.3 2.9 2.9-1.3 2.9-2.9 2.9z" />
+          </svg>
+        </a>
+        <a href="#" onClick={() => handleIconClick('Logout')} className={styles.icon}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#666">
+            <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" />
+          </svg>
+        </a>
       </aside>
-
-      {/* Main content */}
-      <main className={styles.mainContent}>
-        {/* Header */}
+      <main className={styles.main}>
         <header className={styles.header}>
-          <h1 className={styles.title}>Causes</h1>
-          <input type="text" placeholder="Search" className={styles.searchInput} />
-          <div className={styles.cartIconWrapper}>
-            <CartIcon />
-            <span className={styles.cartBadge}>2</span>
+          <div className={styles.headerContent}>
+            <h1 className={styles.title}>Causes</h1>
+            <div className={styles.filter}>
+              <input type="text" placeholder="Filter by" className={styles.filterInput} />
+              <svg width="10" height="6" viewBox="0 0 10 6" fill="#666" className={styles.dropdownIcon}>
+                <path d="M0 0l5 6 5-6z" />
+              </svg>
+              <div className={styles.dropdown}>
+                <div>Date created</div>
+                <div>Popularity</div>
+                <div>Created by</div>
+                <div>Category</div>
+                <div>Goal amount</div>
+              </div>
+            </div>
+          </div>
+          <div className={styles.headerControls}>
+            <div className={styles.cart}>
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="#666" className={styles.cartIcon}>
+                <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-0.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-0.16 0.28-0.25 0.61-0.25 0.96 0 1.1 0.9 2 2 2h10v-2H7.42c-0.14 0-0.25-0.11-0.25-0.25l0.03-0.12 0.9-1.63h7.45c0.75 0 1.41-0.41 1.75-1.03l3.58-6.49c0.08-0.14 0.12-0.31 0.12-0.48 0-0.41-0.33-0.75-0.75-0.75H5.21l-0.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s0.89 2 1.99 2 2-0.9 2-2-0.9-2-2-2z" />
+              </svg>
+              <span className={styles.cartCount}>{cartCount}</span>
+            </div>
+            <img src={PaulStatamImage} alt="Profile" className={styles.profileIcon} />
           </div>
         </header>
-
-        {/* Filters */}
-        <section className={styles.filters}>
-          <div className={styles.filterInputWrapper}>
-            <input type="text" placeholder="filter" className={styles.filterInput} />
-            <button className={styles.dropdownButton} aria-label="Filter dropdown">&#9660;</button>
+        <div className={styles.content}>
+          <div className={styles.causeGrid}>
+            <div className={styles.leftColumn}>
+              {pendingCauses.slice(0, 4).map((cause) => (
+                <div key={cause.id} className={styles.causeCard}>
+                  {cause.image ? (
+                    <img src={cause.image} alt={cause.title} className={styles.causeImage} />
+                  ) : null}
+                  <button className={styles.addToCartButton} onClick={() => handleAddToCart(cause.id)}>
+                    Add to cart
+                  </button>
+                  <div className={styles.causeDetails}>
+                    <h3 className={styles.causeTitle}>{cause.title}</h3>
+                    <p className={styles.causeDescription}>{cause.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className={styles.rightColumn}>
+              {pendingCauses.slice(4, 8).map((cause) => (
+                <div key={cause.id} className={styles.causeCard}>
+                  {cause.image ? (
+                    <img src={cause.image} alt={cause.title} className={styles.causeImage} />
+                  ) : null}
+                  <button className={styles.addToCartButton} onClick={() => handleAddToCart(cause.id)}>
+                    Add to cart
+                  </button>
+                  <div className={styles.causeDetails}>
+                    <h3 className={styles.causeTitle}>{cause.title}</h3>
+                    <p className={styles.causeDescription}>{cause.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className={styles.filterInputWrapper}>
-            <input type="text" className={styles.filterInput} />
-            <button className={styles.dropdownButtonAlt} aria-label="Filter dropdown">&#9660;</button>
-          </div>
-        </section>
-
-        {/* Cause cards grid */}
-        <section className={styles.causeGrid}>
-          {causes.map((cause, i) => (
-            <CauseCard key={i} title={cause.title} description={cause.description} />
-          ))}
-        </section>
+        </div>
       </main>
     </div>
   );
 };
-
 
 export default CauseListpage;
