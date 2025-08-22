@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState, metaByCause } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles.module.css";
 import apiService from "../../services/apiService";
@@ -64,7 +64,7 @@ const CartPage = () => {
       }));
       setMetaByCause(prev => ({ ...prev, ...Object.fromEntries(entries) }));
     })();
-  }, [items]);
+  }, [items, metaByCause]);
 
   const categories = useMemo(() => {
     const set = new Set();

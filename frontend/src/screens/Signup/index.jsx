@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from './styles.module.css';
 import { FaUser, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
 import googleLogo from '../../assets/google-logo.svg';
-import facebookLogo from '../../assets/facebook-logo.svg';
+// facebookLogo import removed as it's not used
 import { Link, useNavigate } from 'react-router-dom';
 import apiService from '../../services/apiService';
 import { useToast } from '../../components/Toast/ToastProvider';

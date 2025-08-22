@@ -54,7 +54,7 @@ function App() {
           <Route path="/redirectingmodal" element={<RedirectingModal />} />
           <Route path="/organizerprofilesettings" element={<OrganizerProfileSettings />} />
           <Route path="/causelistpage" element={<CauseListpage />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<LandingPage />} />
         </Routes>
       </Router>
     </ToastProvider>
