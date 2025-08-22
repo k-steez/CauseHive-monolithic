@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Signup from './screens/Signup';
 import Dashboard from './screens/Dashboard'; // Importing the new Dashboard
 import DonationHistory from './screens/DonationHistory'
