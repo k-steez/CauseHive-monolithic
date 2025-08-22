@@ -17,7 +17,7 @@ import AdminDashboard from './screens/AdminDashboard';
 import CauseReviewPage from './screens/CauseReviewPage';
 import OrganizerProfilePage from './screens/OrganizerProfilePage';
 import OrganizerProfileSettings from "./screens/OrganizerProfileSettings";
-import RedirectingModal from "./RedirectingModal";
+import RedirectingModal from "./screens/RedirectingModal";
 import OrganizerSignUpPage from "./screens/OrganizerSignUpPage";
 import CausedetailPage from './screens/CausedetailPage'; // Importing CausedetailPage
 
@@ -26,6 +26,7 @@ function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<LandingPage />} />
         <Route path="/landingpage" element={<LandingPage />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/sign-in" element={<SignIn />} />
