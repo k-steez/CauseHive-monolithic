@@ -414,3 +414,7 @@ if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+    # Ensure per-alias search_path is applied on each DB connection
+    # This registers a signal handler to SET search_path at runtime
+    from . import db_search_path  # noqa: F401
