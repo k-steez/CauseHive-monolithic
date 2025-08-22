@@ -18,8 +18,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from django.contrib.auth import get_user_model
-from users_n_auth.models import UserProfile
+from .models import User, UserProfile
 from .serializers import UserSerializer, UserProfileSerializer
 from .throttles import PasswordResetThrottle
 
@@ -62,7 +61,6 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         password = attrs.get('password')
 
         try:
-            User = get_user_model()
             user = User.objects.get(email=email)
             if not user.check_password(password):
                 raise AuthenticationFailed("Invalid credentials.")
@@ -167,7 +165,7 @@ class LogoutView(APIView):
 
 
 class UserDetailView(RetrieveAPIView):
-    queryset = get_user_model().objects.all()
+    queryset = User.objects.all()
     serializer_class = UserSerializer
     lookup_field = 'id'
 
